@@ -27,10 +27,6 @@ class EquipedCreature(Creature):
         self.ring_1 = None
         self.ring_2 = None
 
-        self.flags["Dual Wield"] = 0
-        self.flags["Powerful Hands"] = 0
-        self.flags["Shield Master"] = 0
-
     def _reset_stats(self):
         for stat, value in self.base_stats.items():
             setattr(self,stat,value)
@@ -86,9 +82,9 @@ class EquipedCreature(Creature):
                 self.ring_1,
                 self.ring_2,
             ]
-            if item is not None and slot == 0 and "2h_weapon" in ITEM_INDEX[item]["tags"]:
+            if item is not None and slot == 0 and ("2h_weapon" in ITEM_INDEX[item]["tags"] and self.get_flag("Powerful Hands") == 0):
                 equipment[1] = None
-            if item is not None and slot == 1 and equipment[0] is not None and "2h_weapon" in ITEM_INDEX[self.main_hand]["tags"]:
+            if item is not None and slot == 1 and equipment[0] is not None and ("2h_weapon" in ITEM_INDEX[self.main_hand]["tags"] and self.get_flag("Powerful Hands") == 0):
                 equipment[0] = None
             equipment[slot] = item
             equipment_data = [ITEM_INDEX.get(e,None) for e in equipment]
@@ -98,6 +94,9 @@ class EquipedCreature(Creature):
                     if i == 0:
                         stats["attack_string"] = e["weapon"]["damage"]
                         stats["accuracy"] = e["weapon"]["accuracy"]
+                        if "2h_weapon" in e["tags"] and equipment_data[1] is not None:
+                            #raise Exception("test")
+                            stats["accuracy"] = stats["accuracy"] -20 if self.get_flag("Powerful Hands") > 1 else stats["accuracy"]
                         stats["attack_type"] = e["weapon"]["damage_type"]
                     for stat in list(stats.keys())[1:]:
                         if isinstance(stats[stat],int):

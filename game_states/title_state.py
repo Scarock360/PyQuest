@@ -5,6 +5,7 @@ from game_state import AbstractGameState
 from creature import Creature
 from player_creature import PlayerCreature
 from utils._skill_index import SKILL_INDEX
+from utils._item_index import ITEM_INDEX
 
 class TitleState(AbstractGameState):
     menu_options = [
@@ -38,7 +39,9 @@ class TitleState(AbstractGameState):
                 cls.GAME.states["map"].load_level_from_file("tutorial")
                 cls.GAME.party = {"hero": PlayerCreature("Hero",20,2,2,2,"1d3","Smash",100,{},list(SKILL_INDEX.keys()))}
                 #cls.GAME.party["hero"].level = 20
-                cls.GAME.inventory = {"Lesser Potion":5}
+                #cls.GAME.inventory = {"Lesser Potion":5}
+                cls.GAME.inventory = {k:10 for k,_ in ITEM_INDEX.items()}
+                cls.GAME.party["hero"].flags["Powerful Hands"] = 1
                 cls.GAME.update_health_bars()
                 cls.GAME.change_state("map")
             case "Exit":

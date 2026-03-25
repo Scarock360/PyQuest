@@ -83,6 +83,9 @@ class Creature:
             boss_name_override is not None
         )
 
+    def get_flag(self,flag):
+        return self.flags.get(flag,0)
+
     def attack(self, foe, damage_override=None, type_override=None, accuracy_override=None):
         """attack"""
         attack_roll = roll("1d100")-self.agility+foe.agility
@@ -97,7 +100,6 @@ class Creature:
                 total_damage += damage_delt[i]
             return f"{self.name} deals {','.join([f'{dd}' for dd in damage_delt])} {damage_type} damage\nfor a total of {total_damage} to {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}"
         return f"{self.name} missed {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}\n"
-
 
     def take_damage(self, damage, damage_type="un-typed"):
         """damage"""
