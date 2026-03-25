@@ -1,0 +1,1 @@
+start cmd /c python index.py
