@@ -57,12 +57,9 @@ ITEM_INDEX={
     # region  ------ ARMOUR
     "Simple shield":{
         "tags":["shield"],
+        "weapon": {"damage":"1d6","accuracy": 100,"damage_type":"Smash"},
         "resilience": 5,
         "Description": "This shield makes you more resilient\nthough it costs you your ability to wield great weapons."
-    },
-    "Pocket lint":{
-        "tags":[],
-        "Description": "There is always some lint in your pocket\nyou can never escape it."
     },
     "Leather helm":{
         "tags":["head","armour"],

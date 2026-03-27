@@ -110,6 +110,7 @@ class EquipmentState(AbstractGameState):
 
     @classmethod
     def set_gear_type(cls):
+        cls.gear_types = cls.GAME.party["hero"].get_valid_gear()
         cls.gear_type = cls.gear_types[cls.gear_type_selection["c"]]
         cls.gear_list = [None]
         for g_type in cls.gear_type:

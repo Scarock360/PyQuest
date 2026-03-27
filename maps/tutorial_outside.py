@@ -37,7 +37,7 @@ class tutorial_outside(abstract_level):
 ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 """,
-        "solid_chars":"▓⋐⋑𝍑WT./",
+        "solid_chars":"▓⋐⋑⚠WT./",
         "starting_position":{ "x": 4, "y": 7},
         "custom_interactions":[
             {
@@ -59,8 +59,8 @@ class tutorial_outside(abstract_level):
             "⋐⋑": "The chest is empty.\n",
             "⎹⎸" : "The door is open.\n",
             "==" : "The door is open.\n",
-            "🕱🕱" : "Nothing but the dead.\n",
-            "𝍑 " : "The enemy you ran from.\n",
+            "☠ " : "Nothing but the dead.\n",
+            "⚠ " : "The enemy you ran from.\n",
             "WT" : "The water looks clear and refreshing.\n",
             "./" : "You've pulled this lever already.\n",
         },
@@ -68,8 +68,8 @@ class tutorial_outside(abstract_level):
             "░░": "GREEN",
             "▒▒": "CYAN",
             "▓▓": "BRIGHT_WHITE",
-            "𝍑 ": "RED",
-            "🕱🕱": "WHITE"
+            #"⚠ ": "RED",
+            "☠ ": "WHITE"
         },
         "entry_text": f"Welcome to the tutorial.\nTo move use {GREEN}WASD{ENDC}",
         "encounters":[],

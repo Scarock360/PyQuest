@@ -55,6 +55,8 @@ class Game:
             _fields_ = [("size", ctypes.c_int),
                         ("visible", ctypes.c_byte)]
 
+        print("\x1b[8;{rows};{cols}t".format(rows=18, cols=75))
+
         if os.name == 'nt':
             ci = _CursorInfo()
             handle = ctypes.windll.kernel32.GetStdHandle(-11)

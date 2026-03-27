@@ -41,7 +41,9 @@ class TitleState(AbstractGameState):
                 #cls.GAME.party["hero"].level = 20
                 #cls.GAME.inventory = {"Lesser Potion":5}
                 cls.GAME.inventory = {k:10 for k,_ in ITEM_INDEX.items()}
-                cls.GAME.party["hero"].flags["Powerful Hands"] = 1
+                cls.GAME.party["hero"].flags["Powerful Hands"] = 2
+                cls.GAME.party["hero"].flags["Shield Master"] = 2
+                cls.GAME.party["hero"].flags["Dual Wield"] = 2
                 cls.GAME.update_health_bars()
                 cls.GAME.change_state("map")
             case "Exit":

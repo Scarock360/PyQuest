@@ -96,17 +96,15 @@ class EquipedCreature(Creature):
                         stats["accuracy"] = e["weapon"]["accuracy"]
                         if "2h_weapon" in e["tags"] and equipment_data[1] is not None:
                             #raise Exception("test")
-                            stats["accuracy"] = stats["accuracy"] -20 if self.get_flag("Powerful Hands") > 1 else stats["accuracy"]
+                            stats["accuracy"] -= 0 if self.get_flag("Powerful Hands") > 1 else 20
                         stats["attack_type"] = e["weapon"]["damage_type"]
                     for stat in list(stats.keys())[1:]:
+                        multi = 1 + self.get_flag("Shield Master") if "shield" in e["tags"] else 0
                         if isinstance(stats[stat],int):
-                            stats[stat] += e.get(stat,0)
+                            stats[stat] += e.get(stat,0) * multi
             return stats, equipment
 
-    def _validate(self,slot,item_data):
-        if item_data is None:
-            return True
-
+    def get_valid_gear(self):
         valid_equipment_types = [
             ["1h_weapon","2h_weapon"],
             ["shield"],
@@ -116,8 +114,21 @@ class EquipedCreature(Creature):
             ["ring"],
             ["ring"]
         ]
+        if self.get_flag("Shield Master") > 0:
+            valid_equipment_types[0].append("shield")
+        if self.get_flag("Dual Wield"):
+            valid_equipment_types[1].append("1h_weapon")
+            if self.get_flag("Powerful Hands"):
+                valid_equipment_types[1].append("2h_weapon")
 
-        for t in valid_equipment_types[slot]:
+        return valid_equipment_types
+
+
+    def _validate(self,slot,item_data):
+        if item_data is None:
+            return True
+
+        for t in self.get_valid_gear()[slot]:
             if t in item_data["tags"]:
                 return True
         return False

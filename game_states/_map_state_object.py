@@ -23,7 +23,7 @@ class MapObject:
         for encounter in level_to_load.get("encounters",[]):
             e_x = encounter["location"]["x"]
             e_y = encounter["location"]["y"]
-            split_map[e_y] = split_map[e_y][:e_x]+"𝍑 "+split_map[e_y][e_x+2:]
+            split_map[e_y] = split_map[e_y][:e_x]+"⚠ "+split_map[e_y][e_x+2:]
             if e_y not in self.enemy_register:
                 self.enemy_register[e_y]={}
             self.enemy_register[e_y][e_x] = encounter["enemies"]

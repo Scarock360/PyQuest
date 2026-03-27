@@ -150,7 +150,7 @@ class MapState(AbstractGameState):
                 cls.GAME.update_health_bars()
                 for y,e in cls.current_level.enemy_register.items():
                     for x,_ in e.items():
-                        split_map[y] = split_map[y][:x]+"𝍑 "+split_map[y][x+2:]
+                        split_map[y] = split_map[y][:x]+"⚠ "+split_map[y][x+2:]
                 cls.current_level._MAP = "\n".join(split_map)
                 cls.generate_display()
                 return f"You feel {GREEN}rested{ENDC} but so do your {RED}foes{ENDC}\n"
@@ -169,7 +169,7 @@ class MapState(AbstractGameState):
                 cls._down()
             case _:
                 return
-        foe_check = cls._check_ajacency("𝍑 ")
+        foe_check = cls._check_ajacency("⚠ ")
         location_check = cls.current_level.location_trigger_register.get(
             cls.current_level.player_coords["y"],{}).get(cls.current_level.player_coords["x"],None)
         if foe_check:
@@ -184,7 +184,7 @@ class MapState(AbstractGameState):
         split_map = cls.current_level._MAP.split("\n")
         y,x = cls.current_combat
         boss = cls.current_level.enemy_register[y][x][0].get("boss_name",False)# isinstance(cls.current_level.enemy_register[y][x][0],dict)
-        split_map[y] = split_map[y][:x]+"🕱🕱"+split_map[y][x+2:]
+        split_map[y] = split_map[y][:x]+"☠ "+split_map[y][x+2:]
         cls.current_level._MAP = "\n".join(split_map)
         if boss:
             cls.current_level.enemy_register[y].pop(x)

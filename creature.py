@@ -144,3 +144,6 @@ class Creature:
     
     def end_turn(self):
         self.cooldown_skills = {s:max(c-1,0) for s,c in self.cooldown_skills.items()}
+
+    def get_class(self):
+        return "Creature"

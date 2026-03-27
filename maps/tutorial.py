@@ -25,7 +25,7 @@ class tutorial(abstract_level):
 ▓▓  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 """,
-        "solid_chars":"▓⋐⋑𝍑WT./IB",
+        "solid_chars":"▓⋐⋑⚠WT./IB",
         "starting_position":{ "x": 8, "y": 14},
         "custom_interactions":[
             {
@@ -47,8 +47,8 @@ class tutorial(abstract_level):
             "⋐⋑": "The chest is empty.\n",
             "⎹⎸" : "The door is open.\n",
             "==" : "The door is open.\n",
-            "🕱🕱" : "Nothing but the dead.\n",
-            "𝍑 " : "The enemy you ran from.\n",
+            "☠ " : "Nothing but the dead.\n",
+            "⚠ " : "The enemy you ran from.\n",
             "WT" : "The water looks clear and refreshing.\n",
             "./" : "You've pulled this lever already.\n",
         },
@@ -56,8 +56,8 @@ class tutorial(abstract_level):
             "░░": "GREY",
             "▒▒": "CYAN",
             "▓▓": "BRIGHT_WHITE",
-            "𝍑 ": "RED",
-            "🕱🕱": "WHITE",
+            #"⚠ ": "RED",
+            "☠ ": "WHITE",
             "IB": "BLACK"
         },
         "escaped_tiles":{
