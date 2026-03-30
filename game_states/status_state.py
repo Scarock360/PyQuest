@@ -3,6 +3,7 @@ sys.path.insert(0,"../PyQuest\\game_states" )
 sys.path.insert(0,"../PyQuest\\resources" )
 from player_creature import PlayerCreature
 from game_state import AbstractGameState
+from utils.selector import Selector
 
 class StatusState(AbstractGameState):
     
@@ -13,7 +14,7 @@ class StatusState(AbstractGameState):
     ]
 
     level_up_view = "summary"
-    attribute_selection = {"min":0,"c":0,"max":3}
+    attribute_selection = Selector(0,2)
     base_attributes = ["power","resilience","agility"]
 
     @classmethod
@@ -28,7 +29,20 @@ class StatusState(AbstractGameState):
 
     @classmethod
     def handle_inputs(cls,key):
-        pass#raise NotImplementedError()
+            match cls.level_up_view:
+                case "Attributes":
+                    #print(cls.attribute_selection)
+                    match f"{key}":
+                        case "'s'":
+                            cls.attribute_selection.down(1)
+                        case "'w'":
+                            cls.attribute_selection.up(1)
+                        case "'a'":
+                            cls.creature.base_stats[cls.base_attributes[cls.attribute_selection.current]] -= 1
+                        case "'d'":
+                            cls.creature.base_stats[cls.base_attributes[cls.attribute_selection.current]] += 1
+                    #print(cls.attribute_selection)
+            cls.generate_display()
 
     @classmethod
     def handle_menu_event(cls,event):
@@ -38,7 +52,7 @@ class StatusState(AbstractGameState):
                 cls.level_up_view = event
                 cls.generate_display()
             case "Classes":
-                pass
+                cls.generate_display()
             case "Back":
                 cls.GAME.change_state(cls.previous_state)
 
@@ -62,21 +76,10 @@ Lv {cls.creature.level} {cls.creature.get_class()}"""
                 if cls.creature == cls.GAME.party["hero"]:
                     view += "\nClasses:\n" + "\n".join([f"    {c}:{cls.creature.class_investment.get(c,0)}" for c in cls.creature.get_levelable_classes()])
             case "Attributes":
-                
-                p = cls.creature.base_stats["power"]
-                r = cls.creature.base_stats["resilience"]
-                a = cls.creature.base_stats["agility"]
-
-                # view += "\nAttributes:\n" + "\n".join(
-                #     [
-                #         f"    {k}:{(10-len(k))*' '} - {cls.attributes[k]} + >> {v}"
-                #         for k,v in cls.creature.base_stats.items() if k in cls.base_attributes
-                #     ])
-                view += "\nAttributes:\n" + "\n".join(
-                    [
-                        f"    {'>' if index == cls.attribute_selection['c'] else ' '}{att}:{(10-len(att))*' '} - {cls.attributes[att]} + >> {cls.creature.base_stats[att]}"
-                        for index, att in enumerate(cls.base_attributes)
-                    ])
+                view += "\nAttributes:\n" + "\n".join([
+                    f"    {'➤' if index == cls.attribute_selection.current else ' '} {att}:{(10-len(att))*' '} - {cls.attributes[att]} + >> {cls.creature.base_stats[att]}"
+                    for index, att in enumerate(cls.base_attributes)
+                ])
 
         while len(view.split("\n")) < 11:
             view += "\n"
