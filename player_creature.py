@@ -18,6 +18,8 @@ class PlayerCreature(EquipedCreature):
         super().__init__(name, max_hit_points, power, resilience, agility, attack_string, attack_type, accuracy, resistances, skills, boss)
 
     def get_class(self):
+        if len(self.class_investment) > 0:
+            return CLASS_INDEX[self.class_investment.keys()[len(self.class_investment)]]["class_name"]
         return "Peasant"
 
     def gain_exp(self,exp):

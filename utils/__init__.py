@@ -3,6 +3,6 @@ from . import (
     _item_index,
     _skill_index,
     _class_index,
+    selectors,
     utils,
-    selector,
 )

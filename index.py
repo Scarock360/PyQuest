@@ -4,6 +4,7 @@ from pynput.keyboard import Listener as KeyboardListner
 import time
 from utils.utils import tl,tr,bl,br,hr,vt,lt,rt,tt,bt, text_len
 from utils._item_index import ITEM_INDEX
+from utils.selectors import Selector
 from game_states.map_state import MapState
 from game_states.title_state import TitleState
 from game_states.battle_state import BattleState
@@ -39,6 +40,7 @@ class Game:
     _party = "            "
     _menu = ""
     _menu_values = {"min":0,"c_min":0,"c":0,"c_max":0,"max":0}
+    _menu_selector = None
     play_area=""
     _pressed = []
     _running = True
@@ -50,6 +52,7 @@ class Game:
             state.setup(cls)
         menu_max = len(Game.current_state.menu_options)-1
         cls._menu_values= {"min":0,"c_min":0,"c":0,"c_max":min(menu_max,3),"max":menu_max}
+        cls._menu_selector = Selector(Game.current_state.menu_options,4)
 
         class _CursorInfo(ctypes.Structure):
             _fields_ = [("size", ctypes.c_int),
@@ -78,7 +81,7 @@ class Game:
 
             party = "\n".join(p)
             seperator = f"{lt}{hr*3}MENUS{hr*4}{rt}"
-            menu = "\n".join([f"{vt}{l}{' '*(12-text_len(l))}{vt}" for l in cls._menu.split("\n")])
+            menu = "\n".join([f"{vt}{l}{' '*(12-text_len(l))}{vt}" for l in cls._menu_selector.getView()])
             bottom = f"{bl}{hr*12}{bt}{hr*60}{br}"
 
             screen_lines ="\n".join([
@@ -101,58 +104,58 @@ class Game:
 
             print("\n".join(screen_lines))
 
-    @classmethod
-    def menu_up(cls):
-        mvs=cls._menu_values
+    # @classmethod
+    # def menu_up(cls):
+    #     mvs=cls._menu_values
 
-        if mvs["c"] == mvs["min"]:
-            return
-        mvs["c"] -= 1
+    #     if mvs["c"] == mvs["min"]:
+    #         return
+    #     mvs["c"] -= 1
 
-        if mvs["c"] == mvs["c_min"] and mvs["c_min"] != mvs["min"]:
-            mvs["c_min"] -= 1
-            mvs["c_max"] -= 1
-        cls.create_menu()
+    #     if mvs["c"] == mvs["c_min"] and mvs["c_min"] != mvs["min"]:
+    #         mvs["c_min"] -= 1
+    #         mvs["c_max"] -= 1
+    #     cls.create_menu()
 
-    @classmethod
-    def menu_down(cls):
-        mvs=cls._menu_values
+    # @classmethod
+    # def menu_down(cls):
+    #     mvs=cls._menu_values
 
-        if mvs["c"] == mvs["max"]:
-            return
-        mvs["c"] += 1
+    #     if mvs["c"] == mvs["max"]:
+    #         return
+    #     mvs["c"] += 1
 
-        if mvs["c"] == mvs["c_max"] and mvs["c_max"] != mvs["max"]:
-            mvs["c_min"] += 1
-            mvs["c_max"] += 1
-        cls.create_menu()
+    #     if mvs["c"] == mvs["c_max"] and mvs["c_max"] != mvs["max"]:
+    #         mvs["c_min"] += 1
+    #         mvs["c_max"] += 1
+    #     cls.create_menu()
 
-    @classmethod
-    def create_menu(cls):
-        menu = []
-        menu_options = list(cls.current_state.menu_options)
-        mvs = cls._menu_values
-        for i, menu_option in enumerate(menu_options):
-            if i == mvs["c"]:
-                menu.append(f"➤ {menu_option}")
-            elif i == mvs["c_min"]:
-                if mvs["c_min"] != mvs["min"]:
-                    menu.append(f"⮙ {menu_option}")
-                else:
-                    menu.append(f"  {menu_option}")
-            elif i == mvs["c_max"]:
-                if mvs["c_max"] != mvs["max"]:
-                    menu.append(f"⮛ {menu_option}")
-                else:
-                    menu.append(f"  {menu_option}")
-            else:
-                menu.append(f"  {menu_option}")
+    # @classmethod
+    # def create_menu(cls):
+    #     menu = []
+    #     menu_options = list(cls.current_state.menu_options)
+    #     mvs = cls._menu_values
+    #     for i, menu_option in enumerate(menu_options):
+    #         if i == mvs["c"]:
+    #             menu.append(f"➤ {menu_option}")
+    #         elif i == mvs["c_min"]:
+    #             if mvs["c_min"] != mvs["min"]:
+    #                 menu.append(f"⮙ {menu_option}")
+    #             else:
+    #                 menu.append(f"  {menu_option}")
+    #         elif i == mvs["c_max"]:
+    #             if mvs["c_max"] != mvs["max"]:
+    #                 menu.append(f"⮛ {menu_option}")
+    #             else:
+    #                 menu.append(f"  {menu_option}")
+    #         else:
+    #             menu.append(f"  {menu_option}")
 
-        menu = menu[mvs["c_min"]:mvs["c_max"]+1]
-        while len(menu) < 4:
-            menu.append("")
+    #     menu = menu[mvs["c_min"]:mvs["c_max"]+1]
+    #     while len(menu) < 4:
+    #         menu.append("")
 
-        cls._menu = "\n".join(menu)
+    #     cls._menu = "\n".join(menu)
 
     @classmethod
     def create_play_area(cls):
@@ -166,15 +169,11 @@ class Game:
                     case "Key.esc":
                         cls._running = False
                     case "Key.down":
-                        cls.menu_down()
+                        cls._menu_selector.down()
                     case "Key.up":
-                        cls.menu_up()
+                        cls._menu_selector.up()
                     case "Key.enter":
-                        cls.current_state.handle_menu_event(
-                            cls.current_state.menu_options[
-                                cls._menu_values["c"]
-                            ]
-                        )
+                        cls.current_state.handle_menu_event(cls._menu_selector.getSelected())
                     case "'r'":
                         cls._render = not cls._render
                         if not cls._render:
@@ -199,9 +198,7 @@ class Game:
     def change_state(cls,state):
         cls.current_state = cls.states[state]
         cls.current_state.generate_display()
-        menu_max = len(Game.current_state.menu_options)-1
-        cls._menu_values= {"min":0,"c_min":0,"c":0,"c_max":min(menu_max,3),"max":menu_max}
-        cls.create_menu()
+        cls._menu_selector = Selector(Game.current_state.menu_options,4)
 
     @classmethod
     def add_item(cls,item,count=1):
@@ -253,7 +250,7 @@ class Game:
 if __name__ == "__main__":
     held = {}
     Game.setup()
-    Game.create_menu()
+    ##Game.create_menu()
     Game.create_play_area()
     keyboard_listner = KeyboardListner(on_press=Game.process_input,on_release=Game.process_release)
     keyboard_listner.start()

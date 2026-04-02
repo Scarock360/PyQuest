@@ -1,5 +1,6 @@
 CLASS_INDEX={
     "Martial":{
+        "class_name":"Warrior",
         "type": "Base",
         "nodes": {
             "Double Attack":{
@@ -94,11 +95,80 @@ CLASS_INDEX={
         }
     },
     "Arcane":{
+        "class_name":"Mage",
         "type": "Base",
-        "nodes": {}
+        "nodes": {
+            "Arcane-1":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Arcane-2":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Arcane-3":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Arcane-4":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Arcane-5":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+        }
     },
     "Divine":{
+        "class_name":"Cleric",
         "type": "Base",
-        "nodes": {}
+        "nodes": {
+            "Divine-1":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Divine-2":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Divine-3":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Divine-4":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+            "Divine-5":{
+                "description":{},
+                "effect":{},
+                "requirements":{}
+            },
+        }
+    },
+    "Spell Sword":{
+        "class_name":"Spell Sword",
+        "type": "Prestige",
+        "nodes":{}
+    },
+    "Paladin":{
+        "class_name":"Spell Sword",
+        "type": "Prestige",
+        "nodes":{}
+    },
+    "Magus":{
+        "class_name":"Spell Sword",
+        "type": "Prestige",
+        "nodes":{}
     }
 }

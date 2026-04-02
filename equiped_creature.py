@@ -27,9 +27,8 @@ class EquipedCreature(Creature):
         self.ring_1 = None
         self.ring_2 = None
 
-    def _reset_stats(self):
-        for stat, value in self.base_stats.items():
-            setattr(self,stat,value)
+    def reset_stats(self):
+        self.equip(0,self.main_hand)
 
     def get_gear(self):
         return [
