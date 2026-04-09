@@ -27,6 +27,47 @@ SKILL_INDEX={
         },
         "cooldown":2
     },
+    # Flag setters
+    "P-Stance":{
+        "tags":["flag","battle","map"],
+        "name": "Power Stance",
+        "description":"adopt a power boosting stance.",
+        "flag":{
+            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
+            "add":["Power Stance"]
+        },
+        "cooldown": 0
+    },
+    "D-Stance":{
+        "tags":["flag","battle","map"],
+        "name": "Defense Stance",
+        "description":"adopt a resiliance boosting stance.",
+        "flag":{
+            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
+            "add":["Defense Stance"]
+        },
+        "cooldown": 0
+    },
+    "A-Stance":{
+        "tags":["flag","battle","map"],
+        "name": "Agility Stance",
+        "description":"adopt an agility boosting stance.",
+        "flag":{
+            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
+            "add":["Agility Stance"]
+        },
+        "cooldown": 0
+    },
+    "B-Stance":{
+        "tags":["flag","battle","map"],
+        "name": "Balenced Stance",
+        "description":"adopt a stance boosting all stats.",
+        "flag":{
+            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
+            "add":["Agility Stance"]
+        },
+        "cooldown": 0
+    },
     # Spells
     "Bolt":{
         "tags":["battle","attack"],

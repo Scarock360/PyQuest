@@ -3,22 +3,8 @@ from utils._item_index import ITEM_INDEX
 
 class EquipedCreature(Creature):
 
-
-
-
-
     def __init__(self, name, max_hit_points, power, resilience, agility, attack_string, attack_type, accuracy, resistances, skills=[], boss=False):
         super().__init__(name, max_hit_points, power, resilience, agility, attack_string, attack_type, accuracy, resistances, skills, boss)
-        self.base_stats = {
-            "max_hit_points":max_hit_points,
-            "power":power,
-            "resilience":resilience,
-            "agility":agility,
-            "attack_string":attack_string,
-            "attack_type":attack_type,
-            "accuracy":accuracy,
-        }
-
         self.main_hand = None
         self.off_hand = None
         self.head = None
@@ -29,6 +15,13 @@ class EquipedCreature(Creature):
 
     def reset_stats(self):
         self.equip(0,self.main_hand)
+
+    def update_gear(self):
+        for slot,equiped_item in enumerate(self.get_gear()):
+            if not self._validate(slot,equiped_item):
+                self.equip(slot,None)
+
+
 
     def get_gear(self):
         return [
@@ -98,7 +91,7 @@ class EquipedCreature(Creature):
                             stats["accuracy"] -= 0 if self.get_flag("Powerful Hands") > 1 else 20
                         stats["attack_type"] = e["weapon"]["damage_type"]
                     for stat in list(stats.keys())[1:]:
-                        multi = 1 + self.get_flag("Shield Master") if "shield" in e["tags"] else 0
+                        multi = 1 + (self.get_flag("Shield Master") if "shield" in e["tags"] else 0)
                         if isinstance(stats[stat],int):
                             stats[stat] += e.get(stat,0) * multi
             return stats, equipment

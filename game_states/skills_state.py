@@ -86,6 +86,12 @@ class SkillsState(AbstractGameState):
                         cls.GAME.change_state("question")
                         #cls.GAME.change_state(cls.previous_state)
                         return
+                    elif "flag" in skill_detail["tags"]:
+                        for flag in skill_detail["flag"].get("remove",[]):
+                            cls.creature.flags.pop(flag,None)
+                        for flag in skill_detail["flag"].get("add",[]):
+                            cls.creature.flags[flag] = 1
+                        return
                     else:
                         return
                     if raw_text(event) in cls.creature.cooldown_skills:

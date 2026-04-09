@@ -4,7 +4,7 @@ sys.path.insert(0,"../PyQuest\\resources" )
 from player_creature import PlayerCreature
 from game_state import AbstractGameState
 from utils.selectors import Selector, GroupedSelector
-from utils.utils import GREEN, RED, ENDC
+from utils.utils import GREEN, RED, ENDC, GREY
 from utils._class_index import CLASS_INDEX
 
 class StatusState(AbstractGameState):
@@ -56,9 +56,10 @@ class StatusState(AbstractGameState):
                     case "'w'":
                         cls.class_selection.up()
                     case "'a'":
-                        pass
+                        cls.creature.lose_ability(cls.class_selection.getSelected())
                     case "'d'":
-                        pass
+                        cls.creature.gain_ability(cls.class_selection.getSelected())
+                            
         cls.generate_display()
 
     @classmethod
@@ -97,15 +98,18 @@ Lv {cls.creature.level} {cls.creature.get_class()}"""
                 if cls.creature == cls.GAME.party["hero"]:
                     view += "\nClasses:\n" + "\n".join([f"    {c}:{cls.creature.class_investment.get(c,0)}" for c in cls.creature.get_levelable_classes()])
             case "Attributes":
-                # view += "\n\nAttributes:\n" + "\n".join([
-                #     f"    {'➤' if index == cls.attribute_selection.current else ' '} {att}:{(10-len(att))*' '} - {cls.attributes[att]} + >> {cls.compare_attribute(att)}{cls.creature.base_stats[att]}{ENDC}"
-                #     for index, att in enumerate(cls.attribute_selection.getView())
-                # ])
                 view += "\n\nAttributes:\n" + "\n".join([f"{att}:{(15-len(att))*' '} - {cls.attributes[att[2:]]} + >> {cls.compare_attribute(att[2:])}{cls.creature.base_stats[att[2:]]}{ENDC}" for att in cls.attribute_selection.getView()])
 
                 view += f"\n\n    Remaining Attribute Points: {cls.creature.stat_points}"
             case "Classes":
-                view += "\n Classes:\n" + "\n".join([ f"{s}" for s in cls.class_selection.getView()])
+                selector_view = cls.class_selection.getView()
+                selector_view = [f"{x[0:6]}{GREEN}{x[6:]}{ENDC}" if x[6:] in cls.creature.acquired_skills else x for x in selector_view]
+                selector_view = [
+                    f"{x[0:6]}{GREY}{x[6:]}{ENDC}" 
+                    if cls.creature.vlaidate_ability(x[6:]) is False else x
+                    for x in selector_view
+                ]
+                view += f"\n Classes:{' '*19}Class Points:{cls.creature.class_points}\n" + "\n".join([ f"{s}" for s in selector_view])
                 cls.GAME.dialog_box = cls.class_selection.getSelected() + "\n"
 
 

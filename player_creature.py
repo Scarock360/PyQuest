@@ -10,16 +10,17 @@ class PlayerCreature(EquipedCreature):
     level=1
 
     stat_points = 5
-    class_points = 1
+    class_points = 10
 
     class_investment = {}
+    acquired_skills = []
 
     def __init__(self, name, max_hit_points, power, resilience, agility, attack_string, attack_type, accuracy, resistances, skills=[], boss=False):
         super().__init__(name, max_hit_points, power, resilience, agility, attack_string, attack_type, accuracy, resistances, skills, boss)
 
     def get_class(self):
         if len(self.class_investment) > 0:
-            return CLASS_INDEX[self.class_investment.keys()[len(self.class_investment)]]["class_name"]
+            return CLASS_INDEX[[k for k in self.class_investment.keys()][len(self.class_investment.keys())-1]]["class_name"]
         return "Peasant"
 
     def gain_exp(self,exp):
@@ -33,8 +34,80 @@ class PlayerCreature(EquipedCreature):
             self.stat_points += level_ups * 2
             self.class_points += level_ups
 
+    def gain_ability(self, ability):
+        if ability in self.acquired_skills:
+            return
+        if self.class_points > 0 and self.vlaidate_ability(ability):
+            class_details, ability_details = self.get_ability(ability)
+            if class_details["class_id"] not in self.class_investment:
+                self.class_investment[class_details["class_id"]] = 0
+            self.class_investment[class_details["class_id"]] += 1
+            self.acquired_skills.append(ability_details["ability_id"])
+            self.class_points -= 1
+
+    def lose_ability(self,ability):
+        class_details, ability_details = self.get_ability(ability)
+        if ability_details["ability_id"] in self.acquired_skills:
+            self.acquired_skills.remove(ability_details["ability_id"])
+            self.class_investment[class_details["class_id"]] -= 1
+            if self.class_investment[class_details["class_id"]] == 0:
+                self.class_investment.pop(class_details["class_id"],None)
+            self.class_points += 1
+            for a in [s for s in self.acquired_skills][::-1]:
+                if a in self.acquired_skills:
+                    c_d, a_d = self.get_ability(a)
+                    self.acquired_skills.remove(a)
+                    self.class_investment[c_d["class_id"]] -= 1
+                    should_lose_a = not self.vlaidate_ability(a)
+                    self.acquired_skills.append(a)
+                    self.class_investment[c_d["class_id"]] += 1
+                    if should_lose_a:
+                        self.lose_ability(a)
+
+
+
     def get_levelable_classes(self):
         if len(self.class_investment) > 2:
             return self.class_investment.keys()
         else:
             return [c for c,d in CLASS_INDEX.items() if d["type"] == "Base"]
+
+    def get_ability(self,ability):
+        for _,class_details in CLASS_INDEX.items():
+            for ability_name, ability_details in class_details["nodes"].items():
+                if ability == ability_name:
+                    return (class_details,ability_details)
+        return (None,None)
+
+    def vlaidate_ability(self,ability):
+        class_details, ability_details = self.get_ability(ability)
+        if class_details is None and ability_details is None:
+            return None
+        # Check class compatibility
+        if len(self.class_investment) < 1:
+            if class_details["type"] == "Prestige":
+                return False
+        else:
+            if class_details["class_id"] not in self.class_investment:
+                return False
+        # Check ability requirements
+        requirements = ability_details["requirements"]
+        if "previous_nodes" in requirements:
+            if "all_of" in requirements["previous_nodes"]:
+                for required_node in requirements["previous_nodes"]["all_of"]:
+                    if required_node not in self.acquired_skills:
+                        return False
+            if "number_of" in requirements["previous_nodes"]:
+                count = 0
+                for required_node in requirements["previous_nodes"]["number_of"]["of"]:
+                    if required_node in self.acquired_skills:
+                        count += 1
+                if count < requirements["previous_nodes"]["number_of"]["number"]:
+                    return False
+        if "Investment" in requirements:
+            for c,amount in requirements["Investment"].items():
+                if self.class_investment.get(c,0) < amount:
+                    return False
+
+        # Default true
+        return True

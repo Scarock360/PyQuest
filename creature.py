@@ -44,6 +44,15 @@ class Creature:
             boss=False,
             level=1,
         ):
+        self.base_stats = {
+            "max_hit_points":max_hit_points,
+            "power":power,
+            "resilience":resilience,
+            "agility":agility,
+            "attack_string":attack_string,
+            "attack_type":attack_type,
+            "accuracy":accuracy,
+        }
         self.name = name
         self.level = level
         self.hit_points = max_hit_points
