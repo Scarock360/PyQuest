@@ -69,6 +69,19 @@ class Creature:
         self.actions = actions
         self.boss = boss
 
+    def add_skill(self,skill):
+        skill_details = SKILL_INDEX[skill]
+        if "cooldown" in skill_details:
+            self.cooldown_skills[skill] = 0
+        if "uses" in skill_details:
+            self.limited_skills[skill]=skill_details["uses"]
+    
+    def remove_skill(self,skill):
+        if skill in self.cooldown_skills:
+            self.cooldown_skills.pop(skill,None)
+        if skill in self.limited_skills:
+            self.limited_skills.pop(skill,None)
+
     @classmethod
     def from_index(cls,index, boss_name_override=None, level=1):
         definition = CREATURE_INDEX[index]

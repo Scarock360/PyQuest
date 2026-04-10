@@ -27,7 +27,7 @@ class PlayerCreature(EquipedCreature):
         self.exp += exp
         level_ups = 0
         while self.exp > (self.level) * EXP_TO_LEVEL:
-            self.exp -= EXP_TO_LEVEL
+            self.exp -= (self.level) * EXP_TO_LEVEL
             level_ups += 1
         if level_ups > 0:
             self.level += level_ups
@@ -45,12 +45,26 @@ class PlayerCreature(EquipedCreature):
             self.acquired_skills.append(ability_details["ability_id"])
             self.class_points -= 1
 
+            effect = ability_details["effect"]
+            if "increase" in effect:
+                for k,v in effect["increase"].items():
+                    setattr(self,k,getattr(self,k)+v)
+            if "increase_flag" in effect:
+                for k,v in effect["increase_flag"].items():
+                    if k not in self.flags:
+                        self.flags[k] = 0
+                    self.flags[k] += v
+            if "skills" in effect:
+                for skill in effect["skills"]:
+                    self.add_skill(skill)
+                
+
     def lose_ability(self,ability):
         class_details, ability_details = self.get_ability(ability)
         if ability_details["ability_id"] in self.acquired_skills:
             self.acquired_skills.remove(ability_details["ability_id"])
             self.class_investment[class_details["class_id"]] -= 1
-            if self.class_investment[class_details["class_id"]] == 0:
+            if self.class_investment[class_details["class_id"]] == 0 and class_details["type"] == "Prestige":
                 self.class_investment.pop(class_details["class_id"],None)
             self.class_points += 1
             for a in [s for s in self.acquired_skills][::-1]:
@@ -63,8 +77,19 @@ class PlayerCreature(EquipedCreature):
                     self.class_investment[c_d["class_id"]] += 1
                     if should_lose_a:
                         self.lose_ability(a)
-
-
+            
+            effect = ability_details["effect"]
+            if "increase" in effect:
+                for k,v in effect["increase"].items():
+                    setattr(self,k,getattr(self,k)-v)
+            if "increase_flag" in effect:
+                for k,v in effect["increase_flag"]:
+                    self.flags[k] -= v
+                    if self.flags[k] == 0:
+                        self.flags.pop(k,None)
+            if "skills" in effect:
+                for skill in effect["skills"]:
+                    self.remove_skill(skill)
 
     def get_levelable_classes(self):
         if len(self.class_investment) > 2:
@@ -84,7 +109,7 @@ class PlayerCreature(EquipedCreature):
         if class_details is None and ability_details is None:
             return None
         # Check class compatibility
-        if len(self.class_investment) < 1:
+        if len(self.class_investment) < 2:
             if class_details["type"] == "Prestige":
                 return False
         else:

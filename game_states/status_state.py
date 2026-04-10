@@ -57,8 +57,10 @@ class StatusState(AbstractGameState):
                         cls.class_selection.up()
                     case "'a'":
                         cls.creature.lose_ability(cls.class_selection.getSelected())
+                        cls.creature.reset_stats()
                     case "'d'":
                         cls.creature.gain_ability(cls.class_selection.getSelected())
+                        cls.creature.reset_stats()
                             
         cls.generate_display()
 
@@ -80,7 +82,10 @@ class StatusState(AbstractGameState):
                 cls.level_up_view = event
                 cls.generate_display()
             case "Back":
-                cls.GAME.change_state(cls.previous_state)
+                if cls.level_up_view == "Summary":
+                    cls.GAME.change_state(cls.previous_state)
+                else:
+                    cls.level_up_view = "Summary"
 
     @classmethod
     def generate_display(cls):

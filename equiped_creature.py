@@ -20,8 +20,7 @@ class EquipedCreature(Creature):
         for slot,equiped_item in enumerate(self.get_gear()):
             if not self._validate(slot,equiped_item):
                 self.equip(slot,None)
-
-
+        self.equip(0,self.get_gear()[0])
 
     def get_gear(self):
         return [
