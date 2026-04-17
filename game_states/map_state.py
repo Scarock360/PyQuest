@@ -56,7 +56,8 @@ class MapState(AbstractGameState):
             case "Interact":
                 cls.interact()
             case "Skills":
-                cls.GAME.dialog_box = f"You have no abilities\n    {RED}Skill issue{ENDC}"
+                cls.GAME.states["skills"].pre_shift("map",cls.GAME.party["hero"])
+                cls.GAME.change_state("skills")
             case "Items":
                 if len(cls.GAME.inventory.keys()) > 0:
                     cls.GAME.states["inventory"].pre_shift("map")

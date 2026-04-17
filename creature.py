@@ -69,6 +69,41 @@ class Creature:
         self.actions = actions
         self.boss = boss
 
+
+    def apply_flags(self, temp_stats = None):
+        if temp_stats is None:
+            stats = self.base_stats.copy()
+            for stat in stats.keys():
+                stats[stat]= getattr(self,stat)
+        else:
+            stats = temp_stats
+
+        for flag, value in self.flags.items():
+            if isinstance(value,str):
+                v = self.get_class_level(value)
+            else:
+                v = value
+            if "skill" in FLAG_INDEX[flag]["tags"]:
+                if not (FLAG_INDEX[flag]["skill"] in self.cooldown_skills.keys() or FLAG_INDEX[flag]["skill"] in self.limited_skills.keys()):
+                    self.flags.pop(flag,None)
+                    continue
+            match flag:
+                case "Power Stance":
+                    stats["power"] += v*2
+                    break
+                case "Defence Stance":
+                    stats["resilience"] += v*2
+                    break
+                case "Agile Stance":
+                    stats["agility"] += v*2
+                    break
+                case "Balanced Stance":
+                    stats["power"] += v
+                    stats["resilience"] += v
+                    stats["agility"] += v
+                    break
+
+
     def add_skill(self,skill):
         skill_details = SKILL_INDEX[skill]
         if "cooldown" in skill_details:

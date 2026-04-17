@@ -104,59 +104,6 @@ class Game:
 
             print("\n".join(screen_lines))
 
-    # @classmethod
-    # def menu_up(cls):
-    #     mvs=cls._menu_values
-
-    #     if mvs["c"] == mvs["min"]:
-    #         return
-    #     mvs["c"] -= 1
-
-    #     if mvs["c"] == mvs["c_min"] and mvs["c_min"] != mvs["min"]:
-    #         mvs["c_min"] -= 1
-    #         mvs["c_max"] -= 1
-    #     cls.create_menu()
-
-    # @classmethod
-    # def menu_down(cls):
-    #     mvs=cls._menu_values
-
-    #     if mvs["c"] == mvs["max"]:
-    #         return
-    #     mvs["c"] += 1
-
-    #     if mvs["c"] == mvs["c_max"] and mvs["c_max"] != mvs["max"]:
-    #         mvs["c_min"] += 1
-    #         mvs["c_max"] += 1
-    #     cls.create_menu()
-
-    # @classmethod
-    # def create_menu(cls):
-    #     menu = []
-    #     menu_options = list(cls.current_state.menu_options)
-    #     mvs = cls._menu_values
-    #     for i, menu_option in enumerate(menu_options):
-    #         if i == mvs["c"]:
-    #             menu.append(f"➤ {menu_option}")
-    #         elif i == mvs["c_min"]:
-    #             if mvs["c_min"] != mvs["min"]:
-    #                 menu.append(f"⮙ {menu_option}")
-    #             else:
-    #                 menu.append(f"  {menu_option}")
-    #         elif i == mvs["c_max"]:
-    #             if mvs["c_max"] != mvs["max"]:
-    #                 menu.append(f"⮛ {menu_option}")
-    #             else:
-    #                 menu.append(f"  {menu_option}")
-    #         else:
-    #             menu.append(f"  {menu_option}")
-
-    #     menu = menu[mvs["c_min"]:mvs["c_max"]+1]
-    #     while len(menu) < 4:
-    #         menu.append("")
-
-    #     cls._menu = "\n".join(menu)
-
     @classmethod
     def create_play_area(cls):
         cls.current_state.generate_display()
@@ -197,8 +144,8 @@ class Game:
     @classmethod
     def change_state(cls,state):
         cls.current_state = cls.states[state]
-        cls.current_state.generate_display()
         cls._menu_selector = Selector(Game.current_state.menu_options,4)
+        cls.current_state.generate_display()
 
     @classmethod
     def add_item(cls,item,count=1):

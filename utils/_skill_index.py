@@ -29,42 +29,42 @@ SKILL_INDEX={
     },
     # Flag setters
     "P-Stance":{
-        "tags":["flag","battle","map"],
+        "tags":["self_flag","battle","map"],
         "name": "Power Stance",
         "description":"adopt a power boosting stance.",
-        "flag":{
-            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
-            "add":["Power Stance"]
+        "self_flag":{
+            "remove":["Power Stance","Defence Stance","Agile Stance","Balanced Stance"],
+            "add":{"Power Stance":"Martial"}
         },
         "cooldown": 0
     },
     "D-Stance":{
-        "tags":["flag","battle","map"],
-        "name": "Defense Stance",
+        "tags":["self_flag","battle","map"],
+        "name": "Defence Stance",
         "description":"adopt a resiliance boosting stance.",
-        "flag":{
-            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
-            "add":["Defense Stance"]
+        "self_flag":{
+            "remove":["Power Stance","Defence Stance","Agile Stance","Balanced Stance"],
+            "add":{"Defence Stance":"Martial"}
         },
         "cooldown": 0
     },
     "A-Stance":{
-        "tags":["flag","battle","map"],
-        "name": "Agility Stance",
+        "tags":["self_flag","battle","map"],
+        "name": "Agile Stance",
         "description":"adopt an agility boosting stance.",
-        "flag":{
-            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
-            "add":["Agility Stance"]
+        "self_flag":{
+            "remove":["Power Stance","Defence Stance","Agile Stance","Balanced Stance"],
+            "add":{"Agile Stance":"Martial"}
         },
         "cooldown": 0
     },
     "B-Stance":{
-        "tags":["flag","battle","map"],
-        "name": "Balenced Stance",
+        "tags":["self_flag","battle","map"],
+        "name": "Balanced Stance",
         "description":"adopt a stance boosting all stats.",
-        "flag":{
-            "remove":["Power Stance","Defense Stance","Agility Stance","Balenced Stance"],
-            "add":["Agility Stance"]
+        "self_flag":{
+            "remove":["Power Stance","Defence Stance","Agile Stance","Balanced Stance"],
+            "add":{"Balanced Stance":"Martial"}
         },
         "cooldown": 0
     },

@@ -86,11 +86,12 @@ class SkillsState(AbstractGameState):
                         cls.GAME.change_state("question")
                         #cls.GAME.change_state(cls.previous_state)
                         return
-                    elif "flag" in skill_detail["tags"]:
-                        for flag in skill_detail["flag"].get("remove",[]):
+                    elif "self_flag" in skill_detail["tags"]:
+                        for flag in skill_detail["self_flag"].get("remove",[]):
                             cls.creature.flags.pop(flag,None)
-                        for flag in skill_detail["flag"].get("add",[]):
-                            cls.creature.flags[flag] = 1
+                        for flag,value in skill_detail["self_flag"].get("add",{}).items():
+                            cls.creature.flags[flag] = value
+                        cls.creature.reset_stats()
                         return
                     else:
                         return
@@ -101,7 +102,7 @@ class SkillsState(AbstractGameState):
 
     @classmethod
     def generate_display(cls):
-        selected_item = raw_text(cls.menu_options[cls.GAME._menu_values["c"]])
+        selected_item = raw_text(cls.GAME._menu_selector.getSelected())
         if selected_item != "Back":
             selected_skill_detail = SKILL_INDEX[selected_item]
             usage_indicator = ""
@@ -113,4 +114,4 @@ class SkillsState(AbstractGameState):
             line1 = f"{selected_skill_detail['name']}:{' '* buffer}{usage_indicator}"
             cls.GAME.dialog_box = f"{line1}\n{selected_skill_detail['description']}"
         else:
-            cls.GAME.dialog_box = "go\nback"
+            cls.GAME.dialog_box = "go back\n"

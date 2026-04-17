@@ -1,5 +1,6 @@
 from creature import Creature
 from utils._item_index import ITEM_INDEX
+from utils._flag_index import FLAG_INDEX
 
 class EquipedCreature(Creature):
 
@@ -14,13 +15,43 @@ class EquipedCreature(Creature):
         self.ring_2 = None
 
     def reset_stats(self):
-        self.equip(0,self.main_hand)
-
-    def update_gear(self):
         for slot,equiped_item in enumerate(self.get_gear()):
-            if not self._validate(slot,equiped_item):
+            if not self._validate(slot,None if equiped_item is None else ITEM_INDEX[equiped_item]):
                 self.equip(slot,None)
         self.equip(0,self.get_gear()[0])
+
+    def apply_flags(self, temp_stats = None):
+        if temp_stats is None:
+            stats = self.base_stats.copy()
+            for stat in stats.keys():
+                stats[stat]= getattr(self,stat)
+        else:
+            stats = temp_stats
+
+        for flag, value in self.flags.items():
+            if isinstance(value,str):
+                v = self.get_class_level(value)
+            else:
+                v = value
+            if "skill" in FLAG_INDEX[flag]["tags"]:
+                if not (FLAG_INDEX[flag]["skill"] in self.cooldown_skills.keys() or FLAG_INDEX[flag]["skill"] in self.limited_skills.keys()):
+                    self.flags.pop(flag,None)
+                    continue
+            match flag:
+                case "Power Stance":
+                    stats["power"] += v*2
+                    break
+                case "Defence Stance":
+                    stats["resilience"] += v*2
+                    break
+                case "Agile Stance":
+                    stats["agility"] += v*2
+                    break
+                case "Balanced Stance":
+                    stats["power"] += v
+                    stats["resilience"] += v
+                    stats["agility"] += v
+                    break
 
     def get_gear(self):
         return [
@@ -35,6 +66,7 @@ class EquipedCreature(Creature):
 
     def equip(self,slot,item):
         stats, equipment = self._equip(slot,item)
+        self.apply_flags(stats)
         for stat, value in stats.items():
             setattr(self,stat,value)
         old_equipment = [
@@ -59,6 +91,7 @@ class EquipedCreature(Creature):
 
     def check_equip(self,slot,item):
         stats, _ = self._equip(slot,item)
+        self.apply_flags(stats)
         return stats
 
     def _equip(self,slot,item):

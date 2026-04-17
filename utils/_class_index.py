@@ -162,6 +162,7 @@ CLASS_INDEX={
         "type": "Base",
         "nodes": {
             "Arcane-1":{
+                "ability_id":"Arcane-1",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
@@ -224,18 +225,119 @@ CLASS_INDEX={
         "class_id": "Spell Sword",
         "class_name":"Spell Sword",
         "type": "Prestige",
-        "nodes":{}
+        "required_base" : ["Martial","Arcane"],
+        "nodes":{
+            "True Spell Sword":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "Investment" : {
+                        "Martial": 5,
+                        "Arcane": 5,
+                    }
+                }
+            },
+            "ss-1":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "ss-2":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "ss-3":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "ss-4":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "ss-5":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+        }
     },
     "Paladin":{
         "class_id": "Paladin",
-        "class_name":"Spell Sword",
+        "class_name":"Paladin",
         "type": "Prestige",
-        "nodes":{}
+        "required_base" : ["Martial","Divine"],
+        "nodes":{
+            "True Paladin":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "Investment" : {
+                        "Martial": 5,
+                        "Divine": 5,
+                    }
+                }
+            },
+            "p-1":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "p-2":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "p-3":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "p-4":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+        }
     },
     "Magus":{
         "class_id": "Magus",
-        "class_name":"Spell Sword",
+        "class_name":"Magus",
         "type": "Prestige",
-        "nodes":{}
+        "required_base" : ["Divine","Arcane"],
+        "nodes":{
+            "True Magus":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "Investment" : {
+                        "Divine": 5,
+                        "Arcane": 5,
+                    }
+                }
+            },
+            "m-1":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "m-2":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "m-3":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+            "m-4":{
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{}
+            },
+        }
     }
 }
