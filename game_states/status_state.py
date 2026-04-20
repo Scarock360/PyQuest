@@ -56,15 +56,15 @@ class StatusState(AbstractGameState):
                     case "'w'":
                         cls.class_selection.up()
                     case "'a'":
-                        cls.creature.lose_ability(cls.class_selection.getSelected())
                         old = cls.creature.get_levelable_classes()
+                        cls.creature.lose_ability(cls.class_selection.getSelected())
                         cls.creature.reset_stats()
                         new = cls.creature.get_levelable_classes()
                         if old != new:
                             cls.class_selection.updateGroups({c: CLASS_INDEX[c]["nodes"].keys() for c in cls.creature.get_levelable_classes()},6)
                     case "'d'":
-                        cls.creature.gain_ability(cls.class_selection.getSelected())
                         old = cls.creature.get_levelable_classes()
+                        cls.creature.gain_ability(cls.class_selection.getSelected())
                         cls.creature.reset_stats()
                         new = cls.creature.get_levelable_classes()
                         #print(f"{old} == {new} = {old == new}")

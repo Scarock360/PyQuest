@@ -76,6 +76,10 @@ class PlayerCreature(EquipedCreature):
 
     def check_prestige(self):
         invested_classes = list(self.class_investment.keys())
+        for c in invested_classes:
+            if self.class_investment[c] == 0:
+                self.class_investment.pop(c)
+                invested_classes.pop(invested_classes.index(c))
         add_prestige = True
         if len(invested_classes) == 2:
             for i_c in invested_classes:

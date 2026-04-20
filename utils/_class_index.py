@@ -168,21 +168,25 @@ CLASS_INDEX={
                 "requirements":{}
             },
             "Arcane-2":{
+                "ability_id":"Arcane-2",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "Arcane-3":{
+                "ability_id":"Arcane-3",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "Arcane-4":{
+                "ability_id":"Arcane-4",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "Arcane-5":{
+                "ability_id":"Arcane-5",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
@@ -195,26 +199,31 @@ CLASS_INDEX={
         "type": "Base",
         "nodes": {
             "Divine-1":{
+                "ability_id":"Divine-1",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "Divine-2":{
+                "ability_id":"Divine-2",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "Divine-3":{
+                "ability_id":"Divine-3",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "Divine-4":{
+                "ability_id":"Divine-4",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "Divine-5":{
+                "ability_id":"Divine-5",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
@@ -228,6 +237,7 @@ CLASS_INDEX={
         "required_base" : ["Martial","Arcane"],
         "nodes":{
             "True Spell Sword":{
+                "ability_id":"True Spell Sword",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
@@ -238,30 +248,29 @@ CLASS_INDEX={
                 }
             },
             "ss-1":{
+                "ability_id":"ss-1",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "ss-2":{
+                "ability_id":"ss-2",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "ss-3":{
+                "ability_id":"ss-3",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "ss-4":{
+                "ability_id":"ss-4",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
-            },
-            "ss-5":{
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
-            },
+            }
         }
     },
     "Paladin":{
@@ -271,6 +280,7 @@ CLASS_INDEX={
         "required_base" : ["Martial","Divine"],
         "nodes":{
             "True Paladin":{
+                "ability_id":"True Paladin",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
@@ -281,21 +291,25 @@ CLASS_INDEX={
                 }
             },
             "p-1":{
+                "ability_id":"p-1",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "p-2":{
+                "ability_id":"p-2",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "p-3":{
+                "ability_id":"p-3",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "p-4":{
+                "ability_id":"p-4",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
@@ -309,6 +323,7 @@ CLASS_INDEX={
         "required_base" : ["Divine","Arcane"],
         "nodes":{
             "True Magus":{
+                "ability_id":"True Magus",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
@@ -319,21 +334,25 @@ CLASS_INDEX={
                 }
             },
             "m-1":{
+                "ability_id":"p-1",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "m-2":{
+                "ability_id":"p-2",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "m-3":{
+                "ability_id":"p-3",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
             "m-4":{
+                "ability_id":"p-4",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}

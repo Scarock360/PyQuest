@@ -67,20 +67,24 @@ class GroupedSelector:
             self.items.extend([f"    {val}" for val in v])
         if update:
             old_selector_selected   = self.base_selector.getSelected()
-            old_selector_v_max_diff = self.base_selector.current() - self.base_selector.v_max()
-            old_selector_v_min_diff = self.base_selector.current() - self.base_selector.v_min()
+            old_selector_v_max_diff = self.base_selector.current - self.base_selector.v_max
+            old_selector_v_min_diff = self.base_selector.current - self.base_selector.v_min
             
         self.base_selector = Selector(self.items, view_height)
         if update:
             new_current = self.items.index(old_selector_selected)
-            new_v_min = new_current+old_selector_v_min_diff
-            new_v_max = new_current+old_selector_v_max_diff
+            new_v_min = new_current-old_selector_v_min_diff
+            new_v_max = new_current-old_selector_v_max_diff
             if new_v_min < 0:
                 new_v_min -= new_v_min
                 new_v_max -= new_v_min
-            if new_v_max > view_height:
+            if new_v_max > self.base_selector.max:
                 new_v_min -= new_v_max
                 new_v_max -= new_v_max
+
+            self.base_selector.current = new_current
+            self.base_selector.v_max = new_v_max
+            self.base_selector.v_min = new_v_min
         else:
             self.base_selector.current = 1
 
