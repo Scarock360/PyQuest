@@ -1,33 +1,5 @@
 SKILL_INDEX={
-    # Attacks
-    "I-strike":{
-        "tags":["battle","attack"],
-        "name": "Ice Strike",
-        "description":"Perform a weapon attack that deals Ice damage.",
-        "attack":{
-            "damage_type":"Ice"
-        },
-        "cooldown":2
-    },
-    "F-strike":{
-        "tags":["battle","attack"],
-        "name": "Fire Strike",
-        "description":"Perform a weapon attack that deals Fire damage.",
-        "attack":{
-            "damage_type":"Fire"
-        },
-        "cooldown":2
-    },
-    "L-strike":{
-        "tags":["battle","attack"],
-        "name": "Lightning Strike",
-        "description":"Perform a weapon attack that deals Lightning damage.",
-        "attack":{
-            "damage_type":"Lightning"
-        },
-        "cooldown":2
-    },
-    # Flag setters
+    # MARTIAL
     "P-Stance":{
         "tags":["self_flag","battle","map"],
         "name": "Power Stance",
@@ -68,6 +40,117 @@ SKILL_INDEX={
         },
         "cooldown": 0
     },
+    "Lunge":{
+        "tags":["battle","temp_buff","attack"],
+        "name": "Lunge",
+        "description":"Perform a reckless attack that leaves you vulnerable.",
+        "temp_buff":{
+            "stats":{
+                "power":"*2",
+                "resilience":"/2"
+            },
+            "then":{
+                "attack":{}
+            }
+        },
+        "cooldown":0
+    },
+    "Thrust":{
+        "tags":["battle","temp_buff","attack"],
+        "name": "Thrust",
+        "description":"Perform a weaker but precise attack.",
+        "temp_buff":{
+            "stats":{
+                "agility":"*2",
+                "power":"/2"
+            },
+            "then":{
+                "attack":{}
+            }
+        },
+        "cooldown":0
+    },
+    "Defend":{
+        "tags":["battle","temp_buff"],
+        "name": "Defend",
+        "description":"Prepare for an incoming attack.",
+        "temp_buff":{
+            "stats":{
+                "resilience":"*2",
+                "agility":"/2"
+            }
+        },
+        "cooldown":0
+    },
+    "Execute":{
+        "tags":["battle","temp_buff","attack"],
+        "name": "Execution Technique",
+        "description":"Perform a single powerful precise attack.",
+        "temp_buff":{
+            "stats":{
+                "agility":"*2",
+                "power":"*3"
+            },
+            "then":{
+                "attack":{"count":1}
+            }
+        },
+        "cooldown":2
+    },
+    "Exploit":{
+        "tags":["battle","attack"],
+        "name": "Execution Technique",
+        "description":"Perform a single powerful precise attack.",
+        "attack":{
+            "count": 1,
+            "accuracy": 100000
+        },
+        "cooldown":2
+    },
+    "Fortress":{
+        "tags":["battle","temp_buff"],
+        "name": "Fortress Technique",
+        "description":"Perform a single powerful precise attack.",
+        "temp_buff":{
+            "stats":{
+                "agility":"*2",
+                "power":"*3"
+            },
+            "then":{
+                "attack":{"count":1}
+            }
+        },
+        "cooldown":2
+    },
+    # Attacks
+    "I-strike":{
+        "tags":["battle","attack"],
+        "name": "Ice Strike",
+        "description":"Perform a weapon attack that deals Ice damage.",
+        "attack":{
+            "damage_type":"Ice"
+        },
+        "cooldown":2
+    },
+    "F-strike":{
+        "tags":["battle","attack"],
+        "name": "Fire Strike",
+        "description":"Perform a weapon attack that deals Fire damage.",
+        "attack":{
+            "damage_type":"Fire"
+        },
+        "cooldown":2
+    },
+    "L-strike":{
+        "tags":["battle","attack"],
+        "name": "Lightning Strike",
+        "description":"Perform a weapon attack that deals Lightning damage.",
+        "attack":{
+            "damage_type":"Lightning"
+        },
+        "cooldown":2
+    },
+
     # Spells
     "Bolt":{
         "tags":["battle","attack"],

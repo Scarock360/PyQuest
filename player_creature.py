@@ -1,6 +1,7 @@
 from equiped_creature import EquipedCreature
 from utils._item_index import ITEM_INDEX
 from utils._class_index import CLASS_INDEX
+from utils._flag_index import FLAG_INDEX
 
 EXP_TO_LEVEL = 100
 
@@ -22,6 +23,42 @@ class PlayerCreature(EquipedCreature):
     def __init__(self, name, max_hit_points, power, resilience, agility, attack_string, attack_type, accuracy, resistances, skills=[], boss=False):
         super().__init__(name, max_hit_points, power, resilience, agility, attack_string, attack_type, accuracy, resistances, skills, boss)
 
+    def apply_flags(self, temp_stats = None):
+        if temp_stats is None:
+            stats = self.base_stats.copy()
+            for stat in stats.keys():
+                stats[stat]= getattr(self,stat)
+        else:
+            stats = temp_stats
+
+        super().apply_flags(stats)
+        new_flags = self.flags.copy()
+        for flag, value in self.flags.items():
+            if isinstance(value,str):
+                v = self.get_class_level(value)
+            else:
+                v = value
+            if "skill" in FLAG_INDEX[flag]["tags"]:
+                if not (FLAG_INDEX[flag]["skill"] in self.cooldown_skills.keys() or FLAG_INDEX[flag]["skill"] in self.limited_skills.keys()):
+                    new_flags.pop(flag,None)
+                    continue
+            match flag:
+                case "Power Stance":
+                    stats["power"] += v*2
+                    break
+                case "Defence Stance":
+                    stats["resilience"] += v*2
+                    break
+                case "Agile Stance":
+                    stats["agility"] += v*2
+                    break
+                case "Balanced Stance":
+                    stats["power"] += v
+                    stats["resilience"] += v
+                    stats["agility"] += v
+                    break
+        self.flags = new_flags
+
     def get_class(self):
         if len(self.class_investment) > 0:
             return CLASS_INDEX[[k for k in self.class_investment.keys()][len(self.class_investment.keys())-1]]["class_name"]
@@ -31,7 +68,7 @@ class PlayerCreature(EquipedCreature):
         if self.true_prestige:
             return self.level
         else:
-            c_level = self.class_investment[class_name]
+            c_level = self.class_investment.get(class_name,0)
             if len(self.class_investment) > 2:
                 c_level += [l for l in self.class_investment.values()][-1]
             return c_level

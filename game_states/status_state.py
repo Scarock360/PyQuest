@@ -123,7 +123,14 @@ Lv {cls.creature.level} {cls.creature.get_class()}"""
                     for x in selector_view
                 ]
                 view += f"\n Classes:{' '*19}Class Points:{cls.creature.class_points}\n" + "\n".join([ f"{s}" for s in selector_view])
-                cls.GAME.dialog_box = cls.class_selection.getSelected() + "\n"
+
+                _, ability_details = cls.creature.get_ability(cls.class_selection.getSelected())
+
+                cls.GAME.dialog_box = ability_details["ability_id"] + "\n" + (
+                    ability_details["description"]
+                    if cls.creature.vlaidate_ability(ability_details["ability_id"])
+                    else ability_details["requirements"]["description"]
+                )
 
 
         while len(view.split("\n")) < 11:

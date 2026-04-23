@@ -23,6 +23,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires the Double Attack ability.",
                     "previous_nodes": { "all_of" : ["Double Attack"]}
                 }
             },
@@ -35,6 +36,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires the Double Attack ability.",
                     "previous_nodes": { "all_of" : ["Double Attack"]}
                 }
             },
@@ -47,6 +49,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires the Double Attack ability.",
                     "previous_nodes": { "all_of" : ["Double Attack"]}
                 }
             },
@@ -57,6 +60,7 @@ CLASS_INDEX={
                     "skills": ["P-Stance"]
                 },
                 "requirements":{
+                    "description":"Requires the Double Attack ability.",
                     "previous_nodes": { "all_of" : ["Double Attack"]}
                 }
             },
@@ -67,6 +71,7 @@ CLASS_INDEX={
                     "skills": ["D-Stance"]
                 },
                 "requirements":{
+                    "description":"Requires the Double Attack ability.",
                     "previous_nodes": { "all_of" : ["Double Attack"]}
                 }
             },
@@ -77,6 +82,7 @@ CLASS_INDEX={
                     "skills": ["A-Stance"]
                 },
                 "requirements":{
+                    "description":"Requires the Double Attack ability.",
                     "previous_nodes": { "all_of" : ["Double Attack"]}
                 }
             },
@@ -87,7 +93,74 @@ CLASS_INDEX={
                     "skills": ["B-Stance"]
                 },
                 "requirements":{
+                    "description":"Requires two Stance abilities.",
                     "previous_nodes": { "number_of" : {"number": 2 , "of":["Power Stance","Defensive Stance","Agile Stance"]}}
+                }
+            },
+            "Lunge":{
+                "ability_id":"Lunge",
+                "description":"Lunge: Sacrifice resilience for greater power.",
+                "effect":{
+                    "skills": ["Lunge"]
+                },
+                "requirements":{
+                    "description":"Requires the Double Attack ability.",
+                    "previous_nodes": { "all_of" : ["Double Attack"]}
+                }
+            },
+            "Defend":{
+                "ability_id":"Defend",
+                "description":"Defend: Sacrifice agility for greater resilience.",
+                "effect":{
+                    "skills": ["Defend"]
+                },
+                "requirements":{
+                    "description":"Requires the Double Attack ability.",
+                    "previous_nodes": { "all_of" : ["Double Attack"]}
+                }
+            },
+            "Thrust":{
+                "ability_id":"Thrust",
+                "description":"Thrust: Sacrifice power for greater agility.",
+                "effect":{
+                    "skills": ["Thrust"]
+                },
+                "requirements":{
+                    "description":"Requires the Double Attack ability.",
+                    "previous_nodes": { "all_of" : ["Double Attack"]}
+                }
+            },
+            "Executioner":{
+                "ability_id":"Executioner",
+                "description":"Execute: Single powerful strike.",
+                "effect":{
+                    "skills": ["Execute"]
+                },
+                "requirements":{
+                    "description":"Requires the Lunge and Power Stance abilities.",
+                    "previous_nodes": { "all_of" : ["Lunge","Power Stance"]}
+                }
+            },
+            "Fortress":{
+                "ability_id":"Fortress",
+                "description":"Fortress: Multiply resilience and charge revenge counter.",
+                "effect":{
+                    "skills": ["Fortress"]
+                },
+                "requirements":{
+                    "description":"Requires the Defend and Defensive Stance abilities.",
+                    "previous_nodes": { "all_of" : ["Defend", "Defensive Stance"]}
+                }
+            },
+            "Exploiter":{
+                "ability_id":"Exploiter",
+                "description":"Exploit: A single guaranteed critical hit.",
+                "effect":{
+                    "skills": ["Exploit"]
+                },
+                "requirements":{
+                    "description":"Requires the Thrust and Agile Stance abilities.",
+                    "previous_nodes": { "all_of" : ["Thrust", "Agile Stance"]}
                 }
             },
             "Triple Attack":{
@@ -99,6 +172,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires 4 Martial abilities.",
                     "Investment" : {
                         "Martial": 4
                     }
@@ -113,6 +187,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires the Triple Attack and Powerful Hands abilities.",
                     "previous_nodes": { "all_of" : ["Triple Attack","Powerful Hands"]}
                 }
             },
@@ -125,6 +200,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires the Triple Attack and Dual Wield abilities.",
                     "previous_nodes": { "all_of" : ["Triple Attack","Dual Wield"]}
                 }
             },
@@ -137,6 +213,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires the Triple Attack and Shield Master abilities.",
                     "previous_nodes": { "all_of" : ["Triple Attack","Shield Master"]}
                 }
             },
@@ -149,8 +226,24 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
+                    "description":"Requires 9 Martial abilities.",
                     "Investment" : {
                         "Martial": 9
+                    }
+                }
+            },
+            "Quint Attack":{
+                "ability_id":"Quad Attack",
+                "description":"Quint Attack means you can hit five times when attacking.",
+                "effect":{
+                    "increase" :{
+                        "attack_count": 1
+                    }
+                },
+                "requirements":{
+                    "description":"Requires 19 Martial abilities.",
+                    "Investment" : {
+                        "Martial": 19
                     }
                 }
             }

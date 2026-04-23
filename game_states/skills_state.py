@@ -55,6 +55,21 @@ class SkillsState(AbstractGameState):
             cls.GAME.states[cls.previous_state].generate_display()
 
     @classmethod
+    def attack(cls,attack_detail, name):
+        cls.GAME.change_state(cls.previous_state)
+        cls.GAME.states["battle"].combat_log.append(
+            cls.creature.attack(
+                cls.GAME.states["battle"].enemies[cls.GAME.states["battle"].selected_enemy],
+                damage_override = attack_detail.get("damage",None),
+                type_override = attack_detail.get("damage_type",None),
+                accuracy_override = attack_detail.get("accuracy",None),
+                count_override = attack_detail.get("count",None),
+            ) + f" with {name}."
+        )
+        cls.GAME.states["battle"].combat_log_selected = -1
+        cls.GAME.states["battle"].end_turn()
+
+    @classmethod
     def handle_menu_event(cls,event):
         match event:
             case "Back":
@@ -62,18 +77,28 @@ class SkillsState(AbstractGameState):
             case _:
                 skill_detail = SKILL_INDEX[raw_text(event)]
                 if raw_text(event)+ENDC in cls.menu_options:
-                    if "attack" in skill_detail["tags"]:
-                        cls.GAME.change_state(cls.previous_state)
-                        cls.GAME.states["battle"].combat_log.append(
-                            cls.creature.attack(
-                                cls.GAME.states["battle"].enemies[cls.GAME.states["battle"].selected_enemy],
-                                damage_override = skill_detail["attack"].get("damagee",None),
-                                type_override = skill_detail["attack"].get("damage_type",None),
-                                accuracy_override = skill_detail["attack"].get("accuracy",None),
-                            ) + f"with {skill_detail['name']}."
-                        )
-                        cls.GAME.states["battle"].combat_log_selected = -1
-                        cls.GAME.states["battle"].end_turn()
+                    if "temp_buff" in skill_detail["tags"]:
+                        for k,v in skill_detail["temp_buff"]["stats"].items():
+                            opp = v[0]
+                            value = int(v[1:])
+                            match opp:
+                                case "*":
+                                    setattr(cls.creature,k,getattr(cls.creature,k)*value)
+                                case "/":
+                                    setattr(cls.creature,k,getattr(cls.creature,k)/value)
+                                case "+":
+                                    setattr(cls.creature,k,getattr(cls.creature,k)+value)
+                                case "-":
+                                    setattr(cls.creature,k,getattr(cls.creature,k)-value)
+                        if skill_detail["temp_buff"].get("then",False):
+                            if "attack" in skill_detail["temp_buff"]["then"]:
+                                cls.attack(skill_detail["temp_buff"]["then"]["attack"],skill_detail['name'])
+                        else:
+                            cls.GAME.states["battle"].combat_log_selected = -1
+                            cls.GAME.states["battle"].end_turn()
+
+                    elif "attack" in skill_detail["tags"]:
+                        cls.attack(skill_detail["attack"],skill_detail['name'])
                     elif "restorative" in skill_detail["tags"]:
                         options = {v.name:partial(cls._use_restorative,cls.creature,skill_detail,v) for _,v in cls.GAME.party.items()}
                         options["Cancel"] = partial(cls.GAME.change_state,"inventory")
@@ -84,7 +109,6 @@ class SkillsState(AbstractGameState):
                             options
                         )
                         cls.GAME.change_state("question")
-                        #cls.GAME.change_state(cls.previous_state)
                         return
                     elif "self_flag" in skill_detail["tags"]:
                         for flag in skill_detail["self_flag"].get("remove",[]):

@@ -11,7 +11,6 @@ from utils.utils import RED, ENDC, text_len, MAGENTA, WHITE
 class BattleState(AbstractGameState):
     menu_options = [
         "Attack",
-        "Defend",
         "Items",
         "Skills",
         "Examine",
@@ -82,8 +81,6 @@ class BattleState(AbstractGameState):
                 )
                 cls.combat_log_selected = -1
                 cls.end_turn()
-            case "Defend":
-                cls.end_turn()
             case "Skills":
                 cls.GAME.states["skills"].pre_shift("battle",cls.actors[cls.turn_tracker])
                 cls.GAME.change_state("skills")
@@ -125,6 +122,7 @@ class BattleState(AbstractGameState):
         cls.turn_tracker += 1
         if cls.turn_tracker >= len(cls.actors):
             cls.turn_tracker = 0
+        cls.actors[cls.turn_tracker].start_turn()
         cls.generate_dialog()
         cls.generate_display()
         player_actors = len([act for act in cls.actors if act in [pm[1] for pm in cls.GAME.party.items()]])
@@ -195,6 +193,8 @@ class BattleState(AbstractGameState):
             cls.GAME.states["title"].pre_shift()
             return cls.GAME.change_state("title")
         if len(cls.enemies) <= 0:
+            for member in cls.GAME.party.values():
+                member.reset_stats()
             cls.GAME.states["map"].resolve_combat(cls._calculate_exp())
             cls.GAME.change_state("map")
             for a in cls.actors:

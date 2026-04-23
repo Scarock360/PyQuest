@@ -1,5 +1,6 @@
 import math
 from utils._skill_index import SKILL_INDEX
+from utils._flag_index import FLAG_INDEX
 from utils.utils import RED,YELLOW,GREEN,hr,vt,tl,tr,bl,br,FULL_BLOCK,HALF_BLOCK,EMPTY_BLOCK,ENDC,roll, WHITE
 from utils._creature_index import CREATURE_INDEX
 from functools import partial
@@ -70,6 +71,12 @@ class Creature:
         self.boss = boss
 
 
+    def reset_stats(self):
+        new_stats = self.base_stats.copy()
+        self.apply_flags(new_stats)
+        for stat, value in new_stats.items():
+            setattr(self,stat,value)
+
     def apply_flags(self, temp_stats = None):
         if temp_stats is None:
             stats = self.base_stats.copy()
@@ -77,32 +84,8 @@ class Creature:
                 stats[stat]= getattr(self,stat)
         else:
             stats = temp_stats
-
-        for flag, value in self.flags.items():
-            if isinstance(value,str):
-                v = self.get_class_level(value)
-            else:
-                v = value
-            if "skill" in FLAG_INDEX[flag]["tags"]:
-                if not (FLAG_INDEX[flag]["skill"] in self.cooldown_skills.keys() or FLAG_INDEX[flag]["skill"] in self.limited_skills.keys()):
-                    self.flags.pop(flag,None)
-                    continue
-            match flag:
-                case "Power Stance":
-                    stats["power"] += v*2
-                    break
-                case "Defence Stance":
-                    stats["resilience"] += v*2
-                    break
-                case "Agile Stance":
-                    stats["agility"] += v*2
-                    break
-                case "Balanced Stance":
-                    stats["power"] += v
-                    stats["resilience"] += v
-                    stats["agility"] += v
-                    break
-
+        # new_flags = self.flags.copy()
+        # self.flags = new_flags()
 
     def add_skill(self,skill):
         skill_details = SKILL_INDEX[skill]
@@ -143,14 +126,15 @@ class Creature:
     def get_flag(self,flag):
         return self.flags.get(flag,0)
 
-    def attack(self, foe, damage_override=None, type_override=None, accuracy_override=None):
+    def attack(self, foe, damage_override=None, type_override=None, accuracy_override=None, count_override=None):
         """attack"""
         attack_roll = roll("1d100")-self.agility+foe.agility
+        attack_count = self.attack_count if count_override is None else count_override
         if attack_roll < (self.accuracy if accuracy_override is None else accuracy_override ):
             damage_roll = self.attack_string if damage_override is None else damage_override
             damage_type = self.attack_type if type_override is None else type_override
-            damage_delt = [foe.take_damage(roll(damage_roll) + self.power, damage_type) for _ in range(self.attack_count)]
-            if self.attack_count == 1:
+            damage_delt = [foe.take_damage(roll(damage_roll) + self.power, damage_type) for _ in range(attack_count)]
+            if attack_count == 1:
                 return f"{self.name} deals {damage_delt[0]} {damage_type} damage to {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}\n"
             total_damage = 0
             for i in range(len(damage_delt)):
@@ -198,7 +182,10 @@ class Creature:
         hp_bar = f"{self.box_colour}{vt}{colour}{hp}{self.box_colour}{vt}{ENDC}"
         bottom = f"{self.box_colour}{bl}{hr*bar_length}{br}{ENDC}"
         return "\n".join([top, hp_bar, bottom])
-    
+
+    def start_turn(self):
+        self.reset_stats()
+
     def end_turn(self):
         self.cooldown_skills = {s:max(c-1,0) for s,c in self.cooldown_skills.items()}
 
