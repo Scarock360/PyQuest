@@ -150,7 +150,6 @@ SKILL_INDEX={
         },
         "cooldown":2
     },
-
     # Spells
     "Bolt":{
         "tags":["battle","attack"],
@@ -178,5 +177,34 @@ SKILL_INDEX={
         "description":"Summon a poisonous frog to help you combat",
         "summon": "Frog",
         "uses": 3
-    }
+    },
+
+    # Un-sorted
+    "Glint":{},
+    "S-Pixie":{},
+    "S-Gnome":{},
+    "Drain":{},
+    "EnPower":{},
+    "M-EnPower":{},
+    "Bolster":{},
+    "M-Bolster":{},
+    "Quicken":{},
+    "M-Quicken":{},
+    "M-Heal":{},
+    "Flash":{},
+    "Feed":{},
+    "S-Power":{},
+    "S-Virtue":{},
+    "Multi-S":{},
+    "Resist":{},
+    "Critster":{},
+    "Deify":{},
+    "Restore":{},
+    "Dawn":{},
+    "S-Guardian":{},
+    "S-Zealot":{},
+    "S-Archon":{},
+
+
+
 }

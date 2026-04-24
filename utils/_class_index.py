@@ -241,7 +241,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"Requires 19 Martial abilities.",
+                    "description":"Requires all other Martial abilities.",
                     "Investment" : {
                         "Martial": 19
                     }
@@ -291,35 +291,287 @@ CLASS_INDEX={
         "class_name":"Cleric",
         "type": "Base",
         "nodes": {
-            "Divine-1":{
-                "ability_id":"Divine-1",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+            "Basic Divine Magic":{
+                "ability_id":"Basic Divine Magic",
+                "description":"Teaches the basic divine spells Heal and Glint.",
+                "effect":{
+                    "skills": [
+                        "Heal",
+                        "Glint"
+                    ]
+                },
                 "requirements":{}
             },
-            "Divine-2":{
-                "ability_id":"Divine-2",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
+            "Fae Summons":{
+                "ability_id":"Fae Summons",
+                "description":"Teaches the ability to summon pixies and Gnomes.",
+                "effect":{
+                    "skills": [
+                        "S-Pixie",
+                        "S-Gnome"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Basic Divine Magic ability.",
+                    "previous_nodes": { "all_of" : ["Basic Divine Magic"]}
+                }
             },
-            "Divine-3":{
-                "ability_id":"Divine-3",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
+            "Basic Vampiric Magic":{
+                "ability_id":"Basic Vampiric Magic",
+                "description":"Teaches the basic vampiric spell Drain.",
+                "effect":{
+                    "skills": [
+                        "Drain"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Basic Divine Magic ability.",
+                    "previous_nodes": { "all_of" : ["Basic Divine Magic"]}
+                }
             },
-            "Divine-4":{
-                "ability_id":"Divine-4",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
+            "EnPower":{
+                "ability_id":"EnPower",
+                "description":"Teaches the buff spell EnPower.",
+                "effect":{
+                    "skills": [
+                        "EnPower"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Basic Divine Magic ability.",
+                    "previous_nodes": { "all_of" : ["Basic Divine Magic"]}
+                }
             },
-            "Divine-5":{
-                "ability_id":"Divine-5",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
+            "Mass EnPower":{
+                "ability_id":"Mass EnPower",
+                "description":"Teaches the buff spell Mass EnPower.",
+                "effect":{
+                    "skills": [
+                        "M-EnPower"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the EnPower ability.",
+                    "previous_nodes": { "all_of" : ["EnPower"]}
+                }
+            },
+            "Bolster":{
+                "ability_id":"Bolster",
+                "description":"Teaches the buff spell Bolster.",
+                "effect":{
+                    "skills": [
+                        "Bolster"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Basic Divine Magic ability.",
+                    "previous_nodes": { "all_of" : ["Basic Divine Magic"]}
+                }
+            },
+            "Mass Bolster":{
+                "ability_id":"Mass Bolster",
+                "description":"Teaches the buff spell Mass Bolster.",
+                "effect":{
+                    "skills": [
+                        "M-Bolster"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Bolster ability.",
+                    "previous_nodes": { "all_of" : ["Bolster"]}
+                }
+            },
+            "Quicken":{
+                "ability_id":"Quicken",
+                "description":"Teaches the buff spell Quicken.",
+                "effect":{
+                    "skills": [
+                        "Quicken"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Basic Divine Magic ability.",
+                    "previous_nodes": { "all_of" : ["Basic Divine Magic"]}
+                }
+            },
+            "Mass Quicken":{
+                "ability_id":"Mass Quicken",
+                "description":"Teaches the buff spell Mass Quicken.",
+                "effect":{
+                    "skills": [
+                        "M-Quicken"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Quicken ability.",
+                    "previous_nodes": { "all_of" : ["Quicken"]}
+                }
+            },
+            "Advanced Divine Magic":{
+                "ability_id":"Advanced Divine Magic",
+                "description":"Teaches the advanced divine spells Mass Heal and Flash.",
+                "effect":{
+                    "skills": [
+                        "M-Heal",
+                        "Flash"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires 4 Martial abilities.",
+                    "Investment" : {
+                        "Divine": 4
+                    }
+                }
+            },
+            "Advanced Vampiric Magic":{
+                "ability_id":"Advanced Vampiric Magic",
+                "description":"Teaches the advanced vampiric spell Feed.",
+                "effect":{
+                    "skills": [
+                        "Feed"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Advanced Divine and Basic Vampiric Magic abilities.",
+                    "previous_nodes": { "all_of" : ["Advanced Divine Magic","Basic Vampiric Magic"]}
+                }
+            },
+            "Angelic Summons":{
+                "ability_id":"Angelic Summons",
+                "description":"Teaches the ability to summon Powers and Virtues.",
+                "effect":{
+                    "skills": [
+                        "S-Power",
+                        "S-Virtue"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Advanced Divine Magic and Fae Summons abilities.",
+                    "previous_nodes": { "all_of" : ["Advanced Divine Magic","Fae Summons"]}
+                }
+            },
+            "Multi Strike":{
+                "ability_id":"Multi Strike",
+                "description":"Teaches the buff spell Multi Strike.",
+                "effect":{
+                    "skills": [
+                        "Multi-S",
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Advanced Divine Magic and Mass EnPower abilities.",
+                    "previous_nodes": { "all_of" : ["Advanced Divine Magic","Mass EnPower"]}
+                }
+            },
+            "Resist":{
+                "ability_id":"Resist",
+                "description":"Teaches the buff spell Resist.",
+                "effect":{
+                    "skills": [
+                        "Resist",
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Advanced Divine Magic and Mass Bolster abilities.",
+                    "previous_nodes": { "all_of" : ["Advanced Divine Magic","Mass Bolster"]}
+                }
+            },
+            "Critster":{
+                "ability_id":"Critster",
+                "description":"Teaches the buff spell Critster.",
+                "effect":{
+                    "skills": [
+                        "Critster",
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Advanced Divine Magic and Mass Quicken abilities.",
+                    "previous_nodes": { "all_of" : ["Advanced Divine Magic","Mass Quicken"]}
+                }
+            },
+            "Deify":{
+                "ability_id":"Deify",
+                "description":"Teaches the buff spell Deify.",
+                "effect":{
+                    "skills": [
+                        "Deify",
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Multi Strike, resist and Critster abilities.",
+                    "previous_nodes": { "all_of" : ["Multi Strike","Resist","Critster"]}
+                }
+            },
+            "Mastered Divine Magic":{
+                "ability_id":"Mastered Divine Magic",
+                "description":"Teaches the master divine spells Restore and Dawn.",
+                "effect":{
+                    "skills": [
+                        "Restore",
+                        "Dawn"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Advanced Divine Magic and 8 other divine abilities.",
+                    
+                    "previous_nodes": {
+                        "all_of" : ["Advanced Divine Magic"]
+                    },
+                    "Investment" : {
+                        "Divine": 9
+                    }
+                }
+            },
+            "Summon Divine Guardian":{
+                "ability_id":"Summon Divine Guardian",
+                "description":"Teaches the ability to summon Divine Guardians.",
+                "effect":{
+                    "skills": [
+                        "S-Guardian",
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Angelic Summons and 8 other divine abilities.",
+                    "previous_nodes": {
+                        "all_of" : ["Angelic Summons"],
+                    },
+                    "Investment" : {
+                        "Divine": 9
+                    }
+                }
+            },
+            "Summon Avenging Angel":{
+                "ability_id":"Summon Avenging Angel",
+                "description":"Teaches the ability to summon Zealot.",
+                "effect":{
+                    "skills": [
+                        "S-Zealot",
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires Angelic Summons and 8 other divine abilities.",
+                    "previous_nodes": {
+                        "all_of" : ["Angelic Summons"]
+                    },
+                    "Investment" : {
+                        "Divine": 9
+                    }
+                }
+            },
+            "Summon Archon":{
+                "ability_id":"Summon Archon",
+                "description":"Teaches the ability to summon Zealots.",
+                "effect":{
+                    "skills": [
+                        "S-Archon",
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires all other divine abilities.",
+                    "Investment" : {
+                        "Divine": 19
+                    }
+                }
             },
         }
     },
@@ -334,6 +586,7 @@ CLASS_INDEX={
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
+                    "description":"Requires 5 Martial and Arcane abilities.",
                     "Investment" : {
                         "Martial": 5,
                         "Arcane": 5,
@@ -377,6 +630,7 @@ CLASS_INDEX={
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
+                    "description":"Requires 5 Martial and Divine abilities.",
                     "Investment" : {
                         "Martial": 5,
                         "Divine": 5,
@@ -420,6 +674,7 @@ CLASS_INDEX={
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
+                    "description":"Requires 5 Arcane and Divine abilities.",
                     "Investment" : {
                         "Divine": 5,
                         "Arcane": 5,
