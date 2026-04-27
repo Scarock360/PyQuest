@@ -3,6 +3,7 @@ import sys
 import re
 sys.path.insert(0,"../PyQuest\\game_states" )
 sys.path.insert(0,"../PyQuest\\resources" )
+from creature import Creature
 from game_state import AbstractGameState
 from utils._item_index import ITEM_INDEX
 from utils.utils import GREEN, GREY, ENDC, chunks, roll, text_len, raw_text
@@ -19,14 +20,30 @@ class SkillsState(AbstractGameState):
         cls.GAME = game
 
     @classmethod
+    def _check_skill(cls,skill,usage):
+        skill_detail = SKILL_INDEX[skill]
+        if cls.previous_state not in skill_detail['tags']:
+            return False
+        if skill_detail.get("cooldown",False):
+            if usage > 0:
+                return False
+        elif skill_detail.get("uses",False):
+            if usage <= 0:
+                return False
+        if "summon" in skill_detail["tags"]:
+            if len(cls.GAME.party) >= 3:
+                return False
+        return True
+
+    @classmethod
     def pre_shift(cls,previous_state, creature):
         cls.previous_state = previous_state
         cls.selected_item = 0
         cls.creature = creature
         cls.menu_options = []
 
-        cls.menu_options.extend([f"{GREY if cooldown > 0 or cls.previous_state not in SKILL_INDEX[skill]['tags'] else ''}{skill}{ENDC}" for skill,cooldown in creature.cooldown_skills.items()])
-        cls.menu_options.extend([f"{GREY if uses <= 0 or cls.previous_state not in SKILL_INDEX[skill]['tags'] else ''}{skill}{ENDC}" for skill,uses in creature.limited_skills.items()])
+        cls.menu_options.extend([f"{'' if cls._check_skill(skill,cooldown) else GREY}{skill}{ENDC}" for skill,cooldown in creature.cooldown_skills.items()])
+        cls.menu_options.extend([f"{'' if cls._check_skill(skill,uses) else GREY}{skill}{ENDC}" for skill,uses in creature.limited_skills.items()])
         cls.menu_options.append("Back")
 
     @classmethod
@@ -64,6 +81,7 @@ class SkillsState(AbstractGameState):
                 type_override = attack_detail.get("damage_type",None),
                 accuracy_override = attack_detail.get("accuracy",None),
                 count_override = attack_detail.get("count",None),
+                can_crit = attack_detail.get("can_crit",True),
             ) + f" with {name}."
         )
         cls.GAME.states["battle"].combat_log_selected = -1
@@ -117,6 +135,15 @@ class SkillsState(AbstractGameState):
                             cls.creature.flags[flag] = value
                         cls.creature.reset_stats()
                         return
+                    elif "summon" in skill_detail["tags"]:
+                        name = skill_detail["summon"]["creature"]
+                        if f"{name}_1" not in cls.GAME.party:
+                            name = f"{name}_1"
+                        elif f"{name}_2" not in cls.GAME.party:
+                            name = f"{name}_2"
+                        cls.GAME.party[name] = Creature.from_index(skill_detail["summon"]["creature"],None,1)
+                        cls.GAME.update_health_bars()
+                        cls.GAME.change_state(cls.previous_state)
                     else:
                         return
                     if raw_text(event) in cls.creature.cooldown_skills:

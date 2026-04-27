@@ -122,6 +122,81 @@ SKILL_INDEX={
         },
         "cooldown":2
     },
+    # Arcane
+    
+    # Divine
+    "Heal":{
+        "tags":["map", "battle", "restorative"],
+        "name": "Heal",
+        "description":"Restore the body and mind of an ally.",
+        "restorative":"3d4",
+        "uses": 3
+    },
+    "Glint":{
+        "tags":["battle","attack"],
+        "name": "Glint",
+        "description":"launch a moat of light towards an enemy.",
+        "attack":{
+            "count":1,
+            "damage": "1d4",
+            "damage_type": "Holy",
+            "accuracy": 150,
+            "can_crit": False
+        },
+        "cooldown": 0
+    },
+    "S-Pixie":{
+        "tags":["battle","map","summon"],
+        "name": "Summon Pixie",
+        "description":"Summon a Pixie to aid you.",
+        "summon":{
+            "creature":"Pixie"
+        },
+        "uses": 10
+    },
+    "S-Gnome":{
+        "tags":["battle","map","summon"],
+        "name": "Summon Gnome",
+        "description":"launch a moat of light towards an enemy.",
+        "summon":{
+            "creature":"Gnome"
+        },
+        "uses": 1
+    },
+    "Drain":{
+        "tags":["battle","attack"],
+        "name": "Glint",
+        "description":"launch a moat of light towards an enemy.",
+        "attack":{
+            "damage": "{Divine}d4",
+            "damage_type": "Vamp",
+            "accuracy": 150,
+            "can_crit": False
+        },
+        "cooldown": 2
+    },
+    "EnPower":{},
+    "M-EnPower":{},
+    "Bolster":{},
+    "M-Bolster":{},
+    "Quicken":{},
+    "M-Quicken":{},
+    "M-Heal":{},
+    "Flash":{},
+    "Feed":{},
+    "S-Power":{},
+    "S-Virtue":{},
+    "Multi-S":{},
+    "Resist":{},
+    "Critster":{},
+    "Deify":{},
+    "Restore":{},
+    "Dawn":{},
+    "S-Guardian":{},
+    "S-Zealot":{},
+    "S-Archon":{},
+    
+    
     # Attacks
     "I-strike":{
         "tags":["battle","attack"],
@@ -146,7 +221,7 @@ SKILL_INDEX={
         "name": "Lightning Strike",
         "description":"Perform a weapon attack that deals Lightning damage.",
         "attack":{
-            "damage_type":"Lightning"
+            "damage_type":"Light"
         },
         "cooldown":2
     },
@@ -157,19 +232,12 @@ SKILL_INDEX={
         "description":"launch a single bolt of lightning towards an enemy.",
         "attack":{
             "damage": "2d4",
-            "damage_type": "Lightning",
+            "damage_type": "Light",
             "accuracy": 150
         },
         "cooldown": 3
     },
     # Heals
-    "Heal":{
-        "tags":["map", "battle", "restorative"],
-        "name": "Heal",
-        "description":"Restore the body and mind of an ally.",
-        "restorative":"3d4",
-        "uses": 3
-    },
     # Summons
     "S-Frog":{
         "tags":["map","battle","summon"],
@@ -180,30 +248,7 @@ SKILL_INDEX={
     },
 
     # Un-sorted
-    "Glint":{},
-    "S-Pixie":{},
-    "S-Gnome":{},
-    "Drain":{},
-    "EnPower":{},
-    "M-EnPower":{},
-    "Bolster":{},
-    "M-Bolster":{},
-    "Quicken":{},
-    "M-Quicken":{},
-    "M-Heal":{},
-    "Flash":{},
-    "Feed":{},
-    "S-Power":{},
-    "S-Virtue":{},
-    "Multi-S":{},
-    "Resist":{},
-    "Critster":{},
-    "Deify":{},
-    "Restore":{},
-    "Dawn":{},
-    "S-Guardian":{},
-    "S-Zealot":{},
-    "S-Archon":{},
+    
 
 
 

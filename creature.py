@@ -126,7 +126,7 @@ class Creature:
     def get_flag(self,flag):
         return self.flags.get(flag,0)
 
-    def attack(self, foe, damage_override=None, type_override=None, accuracy_override=None, count_override=None):
+    def attack(self, foe, damage_override=None, type_override=None, accuracy_override=None, count_override=None, can_crit=True):
         """attack"""
         attack_roll = roll("1d100")-self.agility+foe.agility
         attack_count = self.attack_count if count_override is None else count_override

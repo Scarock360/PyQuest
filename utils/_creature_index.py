@@ -76,5 +76,39 @@ CREATURE_INDEX = {
                 "chance":10
             },
         ]
+    },
+        "Pixie":{
+        "exp": 10,
+        "max_hp": 8,
+        "power": 1,
+        "resilience": 1,
+        "agility": 10,
+        "damage": "1d2",
+        "damage_type": "Magic",
+        "accuracy": 85,
+        "resistances":{},
+        "actions":[
+            {
+                "action":"attack",
+                "chance":10
+            },
+        ]
+    },
+        "Gnome":{
+        "exp": 10,
+        "max_hp": 8,
+        "power": 1,
+        "resilience": 1,
+        "agility": 10,
+        "damage": "1d2",
+        "damage_type": "Magic",
+        "accuracy": 85,
+        "resistances":{},
+        "actions":[
+            {
+                "action":"attack",
+                "chance":10
+            },
+        ]
     }
 }
