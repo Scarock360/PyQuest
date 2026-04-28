@@ -30,6 +30,13 @@ class BattleState(AbstractGameState):
         cls.GAME = game
 
     @classmethod
+    def setup_actors(cls):
+        cls.actors=[]
+        cls.actors.extend([v for _,v in cls.GAME.party.items()])
+        cls.actors.extend(cls.enemies)
+        cls.actors[cls.turn_tracker].override_colours(box_colour = MAGENTA)
+
+    @classmethod
     def load_battle(cls,enemies):
         cls.raw_enemies = enemies
         cls.enemies = []

@@ -144,6 +144,14 @@ class SkillsState(AbstractGameState):
                         cls.GAME.party[name] = Creature.from_index(skill_detail["summon"]["creature"],None,1)
                         cls.GAME.update_health_bars()
                         cls.GAME.change_state(cls.previous_state)
+                        summon_message = f"You summoned a {name[0:-2]} to help you\n"
+                        if cls.previous_state == "battle":
+                            cls.GAME.states["battle"].setup_actors()
+                            cls.GAME.states["battle"].combat_log.append(summon_message)
+                            cls.GAME.states["battle"].combat_log_selected = -1
+                            cls.GAME.states["battle"].end_turn()
+                        else:
+                            cls.GAME.dialog_box = summon_message
                     else:
                         return
                     if raw_text(event) in cls.creature.cooldown_skills:
