@@ -6,7 +6,7 @@ sys.path.insert(0,"../PyQuest\\game_states" )
 from utils._creature_index import CREATURE_INDEX
 from game_state import AbstractGameState
 from creature import Creature
-from utils.utils import RED, ENDC, text_len, MAGENTA, WHITE
+from utils.utils import RED, ENDC, text_len, MAGENTA, WHITE, roll
 
 class BattleState(AbstractGameState):
     menu_options = [
@@ -28,6 +28,7 @@ class BattleState(AbstractGameState):
     @classmethod
     def setup(cls,game):
         cls.GAME = game
+        cls.rewards = {}
 
     @classmethod
     def setup_actors(cls):
@@ -189,7 +190,17 @@ class BattleState(AbstractGameState):
         for a in cls.actors:
             if a.hit_points <=0:
                 i = cls.actors.index(a)
-                cls.actors.pop(i)
+                a = cls.actors.pop(i)
+                for item in a.get_gear():
+                    if item is not None:
+                        if item not in cls.rewards:
+                            cls.rewards[item] = 0
+                        cls.rewards[item] += 1
+                for item, chance in CREATURE_INDEX[a.name].get("drops",{}).items():
+                    if roll("1d100") >= chance:
+                        if item not in cls.rewards:
+                            cls.rewards[item] = 0
+                        cls.rewards[item] += 1
                 if i < cls.turn_tracker:
                     cls.turn_tracker -= 1
                 if a in cls.enemies:

@@ -60,6 +60,32 @@ CREATURE_INDEX = {
             },
         ]
     },
+    "Hat Rat":{
+        "exp": 10,
+        "max_hp": 5,
+        "power": 1,
+        "resilience": 1,
+        "agility": 1,
+        "damage": "1d2",
+        "damage_type": "Stab",
+        "accuracy": 85,
+        "resistances":{},
+        "actions":[
+            {
+                "action":"attack",
+                "chance":10
+            },
+        ],
+        "equipment":[
+            None,
+            None,
+            "Rat Hat",
+            None,
+            None,
+            None,
+            None,
+        ]
+    },
     "Pigeon":{
         "exp": 10,
         "max_hp": 8,
@@ -75,26 +101,32 @@ CREATURE_INDEX = {
                 "action":"attack",
                 "chance":10
             },
-        ]
+        ],
+        "drops":{
+            "feather": 100
+        }
     },
-        "Pixie":{
-        "exp": 10,
-        "max_hp": 8,
-        "power": 1,
-        "resilience": 1,
-        "agility": 10,
-        "damage": "1d2",
-        "damage_type": "Magic",
-        "accuracy": 85,
-        "resistances":{},
-        "actions":[
-            {
-                "action":"attack",
-                "chance":10
-            },
-        ]
-    },
-        "Gnome":{
+    "Pixie":{
+    "exp": 10,
+    "max_hp": 8,
+    "power": 1,
+    "resilience": 1,
+    "agility": 10,
+    "damage": "1d2",
+    "damage_type": "Magic",
+    "accuracy": 85,
+    "resistances":{},
+    "actions":[
+        {
+            "action":"attack",
+            "chance":10
+        },
+    ],
+    "abilities":[
+        "Basic Divine Magic"
+    ]
+},
+    "Gnome":{
         "exp": 10,
         "max_hp": 8,
         "power": 1,

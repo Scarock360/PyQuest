@@ -66,6 +66,12 @@ ITEM_INDEX={
         "resilience":2,
         "Description": "A simple leather helm.\nProvides additional resilience when equipped."
     },
+    "Rat Hat":{
+        "tags":["head","armour"],
+        "resilience":2,
+        "agility":1,
+        "Description": "A cute hat previously used by a rat.\nProvides additional resilience when equipped."
+    },
     "Leather cuirass":{
         "tags":["body","armour"],
         "resilience":2,
@@ -87,4 +93,8 @@ ITEM_INDEX={
         "Description": "A simple amulet.\nProvides additional power when equipped."
     },
     # endregion
+    "feather":{
+        "tags":["trinket"],
+        "Description": "A single feather.\n"
+    }
 }

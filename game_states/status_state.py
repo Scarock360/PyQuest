@@ -1,7 +1,6 @@
 import sys
 sys.path.insert(0,"../PyQuest\\game_states" )
 sys.path.insert(0,"../PyQuest\\resources" )
-from player_creature import PlayerCreature
 from game_state import AbstractGameState
 from utils.selectors import Selector, GroupedSelector
 from utils.utils import GREEN, RED, ENDC, GREY
@@ -23,11 +22,19 @@ class StatusState(AbstractGameState):
         cls.GAME = game
 
     @classmethod
-    def pre_shift(cls, creature, previous_state):
+    def pre_shift(cls, creature, previous_state, level_up=False):
         cls.level_up_view = "Summary"
         cls.previous_state = previous_state
         cls.creature = creature
-        cls.level_up = isinstance(creature,PlayerCreature)
+        if level_up:
+            cls.menu_options = [
+                "Attributes",
+                "Classes",
+                "Back"
+            ]
+        else:
+            cls.menu_options = ["Back"]
+
         cls.class_selection = GroupedSelector({c: CLASS_INDEX[c]["nodes"].keys() for c in cls.creature.get_levelable_classes()},6)
 
     @classmethod
@@ -108,8 +115,7 @@ Lv {cls.creature.level} {cls.creature.get_class()}"""
                 a = front_pad(f"{cls.creature.agility}")
 
                 view += f"""\n    Power ------ {p}   Resilience - {r}   Agility ---- {a}"""
-                if cls.creature == cls.GAME.party["hero"]:
-                    view += "\nClasses:\n" + "\n".join([f"    {c}:{cls.creature.class_investment.get(c,0)}" for c in cls.creature.get_levelable_classes()])
+                view += "\nClasses:\n" + "\n".join([f"    {c}:{cls.creature.class_investment.get(c,0)}" for c in cls.creature.get_levelable_classes()])
             case "Attributes":
                 view += "\n\nAttributes:\n" + "\n".join([f"{att}:{(15-len(att))*' '} - {cls.attributes[att[2:]]} + >> {cls.compare_attribute(att[2:])}{cls.creature.base_stats[att[2:]]}{ENDC}" for att in cls.attribute_selection.getView()])
 

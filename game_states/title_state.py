@@ -3,7 +3,6 @@ sys.path.insert(0,"../PyQuest\\game_states" )
 from utils.utils import GREEN,YELLOW,CYAN,MAGENTA,ENDC,RED,BLINK
 from game_state import AbstractGameState
 from creature import Creature
-from player_creature import PlayerCreature
 from utils._skill_index import SKILL_INDEX
 from utils._item_index import ITEM_INDEX
 
@@ -37,12 +36,12 @@ class TitleState(AbstractGameState):
             case "New":
                 cls.GAME.states["map"].previously_visited={}
                 cls.GAME.states["map"].load_level_from_file("tutorial")
-                cls.GAME.party = {"hero": PlayerCreature("Hero",20,2,2,2,"1d3","Smash",100,{},[])}
-                #cls.GAME.party = {"hero": PlayerCreature("Hero",20,2,2,2,"1d3","Smash",100,{},list(SKILL_INDEX.keys()))}
+                cls.GAME.party = {"hero": Creature("Hero",20,2,2,2,"1d3","Smash",100,{},[])}
+                #cls.GAME.party = {"hero": Creature("Hero",20,2,2,2,"1d3","Smash",100,{},list(SKILL_INDEX.keys()))}
                 
                 #cls.GAME.party["hero"].level = 20
-                #cls.GAME.inventory = {"Lesser Potion":5}
-                cls.GAME.inventory = {k:10 for k,_ in ITEM_INDEX.items()}
+                cls.GAME.inventory = {"Lesser Potion":5}
+                #cls.GAME.inventory = {k:10 for k,_ in ITEM_INDEX.items()}
                 # cls.GAME.party["hero"].flags["Powerful Hands"] = 2
                 # cls.GAME.party["hero"].flags["Shield Master"] = 2
                 # cls.GAME.party["hero"].flags["Dual Wield"] = 2

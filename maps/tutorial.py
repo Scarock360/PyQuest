@@ -70,7 +70,7 @@ class tutorial(abstract_level):
             {
                 "enemies":[
                     {
-                        "creature":"Rat",
+                        "creature":"Hat Rat",
                         "level": 1
                     },
                     {

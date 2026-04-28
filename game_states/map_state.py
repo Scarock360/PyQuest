@@ -70,7 +70,7 @@ class MapState(AbstractGameState):
             case "Level up":
                 cls.GAME.states["equipment"].pre_shift("map")
                 cls.GAME.change_state("equipment")
-                cls.GAME.states["status"].pre_shift(cls.GAME.party["hero"],"map")
+                cls.GAME.states["status"].pre_shift(cls.GAME.party["hero"],"map",True)
                 cls.GAME.change_state("status")
             case "Rest":
                 cls.GAME.dialog_box = cls.Rest()
@@ -191,7 +191,23 @@ class MapState(AbstractGameState):
             cls.current_level.enemy_register[y].pop(x)
         for k,c in cls.GAME.party.items():
             c.cooldown_skills = {k:0 for k,_ in c.cooldown_skills.items()}
-        cls.GAME.dialog_box = f"You won, earning yourself {GREEN}{exp}{ENDC} exp"
+        victory_message = f"You won, earning yourself {GREEN}{exp}{ENDC} exp"
+        rewards = cls.GAME.states["battle"].rewards
+        if len(rewards) > 1:
+            victory_message += "\nand some items."
+        elif len(rewards) == 1:
+            for k,v in rewards.items():
+                victory_message += f"\nand {v}x {k}"
+        else:
+            victory_message += ".\n"
+
+        for k,v in rewards.items():
+            cls.GAME.add_item(k,v)
+
+
+
+
+        cls.GAME.dialog_box = victory_message
         cls.GAME.party["hero"].gain_exp(exp)
 
     @classmethod
