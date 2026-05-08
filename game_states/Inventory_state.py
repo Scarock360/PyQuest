@@ -129,8 +129,8 @@ class InventoryState(AbstractGameState):
         item_tags = item_detail["tags"]
         if cls.previous_state in item_tags:
             if "restorative" in item_tags:
-                options = {v.name:partial(cls._use_restorative,item,k) for k,v in cls.GAME.party.items()}
-                options["Cancel"] = partial(cls.GAME.change_state,"inventory")
+                options = [(v.name,partial(cls._use_restorative,item,k)) for k,v in cls.GAME.party.items()]
+                options.append(("Cancel",partial(cls.GAME.change_state,"inventory")))
                 
                 cls.GAME.states["question"].pre_shift(
                     "inventory",
@@ -139,11 +139,11 @@ class InventoryState(AbstractGameState):
                 )
                 cls.GAME.change_state("question")
             if "grenade" in item_tags:
-                options = {
-                    e.name: partial(cls._use_grenade,item,e) 
+                options = [
+                    (e.name,partial(cls._use_grenade,item,e)) 
                     for e in cls.GAME.states["battle"].enemies
-                }
-                options["Cancel"] = partial(cls.GAME.change_state,"inventory")
+                ]
+                options.append(("Cancel",partial(cls.GAME.change_state,"inventory")))
                 
                 cls.GAME.states["question"].pre_shift(
                     "inventory",

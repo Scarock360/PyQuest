@@ -7,37 +7,25 @@ class tutorial(abstract_level):
         "map": \
 """
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▓▓▓▓▓▓WTWt▓▓▓▓▓▓▓▓./  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓
+▓▓▓▓▓▓T2Wt▓▓▓▓▓▓▓▓C1  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓
 ▓▓▓▓▓▓▓▓WT▓▓▓▓▓▓▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓
-▓▓WTWtWTWtWTWtWT▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓
+▓▓WTWtWTB1WTWtWT▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓
 ▓▓WtWTWtWTWtWTWt▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓
 ▓▓▓▓WtWTWtWTWt▓▓▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓
 ▓▓▓▓▓▓WtWTWt▓▓▓▓▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓
 ▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓==▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓
-▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░DRIB
+▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░D1IB
 ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓
-▓▓░░  ░░  ░░  ░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓==▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▓▓  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓
+▓▓░░  ░░E1░░  ░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓==▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓  ░░  ░░  ░░  ▓▓  ▒▒T1▒▒  ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓
 ▓▓░░  ░░  ░░  ░░▓▓▒▒  ▒▒  ▒▒▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓▒▒  ▒▒  ▒▒▓▓
 ▓▓  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ⎹⎸  ▒▒  ▒▒  ▓▓
-▓▓░░  ░░  ░░  ░░⎹⎸▒▒  ▒▒  ▒▒▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓▒▒  ▒▒  ▒▒▓▓
-▓▓  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓
+▓▓░░  ░░SP░░  ░░⎹⎸▒▒  ▒▒  ▒▒▓▓░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░▓▓▒▒  ▒▒  ▒▒▓▓
+▓▓B2░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ░░  ▓▓  ▒▒  ▒▒  ▓▓
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 """,
-        "solid_chars":"▓⋐⋑⚠WT./IB",
-        "starting_position":{ "x": 8, "y": 14},
-        "custom_interactions":[
-            {
-                "events":[
-                    {"replace_all":{"replace":"WT","with":"░░"}},
-                    {"replace_all":{"replace":"Wt","with":"  "}},
-                    {"msg":"You hear water flowing nearby.\n"}
-                ],
-                "location": {"x":18,"y":2},
-                "one_time":True
-            }
-        ],
+        "solid_chars":"▓⋐⋑⚠WTC1IB",
         "default_interactions":
         {
             "▓▓": "Its just a wall.\n",
@@ -63,11 +51,24 @@ class tutorial(abstract_level):
         "escaped_tiles":{
             "WT": f"{BLUE}▒▒{ENDC}",
             "Wt": f"{BLUE}░░{ENDC}",
-            "DR": f"{MAGENTA}▒▒{ENDC}"
+            "D1": f"{MAGENTA}▒▒{ENDC}",
+            "C1": "./",
+            "SP": "  "
         },
         "entry_text": f"Welcome to the tutorial.\nTo move use {GREEN}WASD{ENDC}",
-        "encounters":[
-            {
+        "custom_interactions":{
+            "C1":{
+                "events":[
+                    {"replace_all":{"replace":"WT","with":"░░"}},
+                    {"replace_all":{"replace":"Wt","with":"  "}},
+                    {"msg":"You hear water flowing nearby.\n"}
+                ],
+                #"location": {"x":18,"y":2},
+                "one_time":True
+            }
+        },
+        "enemies":{
+            "E1":{
                 "enemies":[
                     {
                         "creature":"Hat Rat",
@@ -77,28 +78,25 @@ class tutorial(abstract_level):
                         "creature":"Pigeon",
                         "level": 1
                     }
-                ],
-                "location": {"x":8,"y":10}
+                ]
             },
-            {
+            "B1":{
                 "enemies":[{
                     "creature":"Clown",
                     "boss_name":"Bozo, the Swamp Clown",
                     "level":1
-                }],
-                "location": {"x":8,"y":4},
+                }]
             },
-            {
+            "B2":{
                 "enemies":[{
                     "creature":"Dummy",
                     "boss_name":"dummy",
                     "level":1
                 }],
-                "location": {"x":2,"y":17},
             }
-        ],
-        "treasures":[
-            {
+        },
+        "treasures":{
+            "T1":{
                 "items":[
                     {
                         "item":"Molotov",
@@ -108,10 +106,9 @@ class tutorial(abstract_level):
                         "item":"War axe",
                         "quantity": 1
                     }
-                ],
-                "location": {"x":22,"y":13}
+                ]
             },
-            {
+            "T2":{
                 "items":[
                     {
                         "item":"Potion",
@@ -121,17 +118,21 @@ class tutorial(abstract_level):
                         "item":"Rusty lance",
                         "quantity": 1
                     }
-                ],
-                "location": {"x":6,"y":2}
+                ]
             }
-        ],
-        "location_triggers":[
-            {
-                "location":{"x":76,"y":10},
+        },
+        "location_triggers":{
+            "D1":{
                 "events":[
-                    {"change_level":{"level":"tutorial_outside", "location":{ "x": 86, "y": 16}}}
+                    {
+                        "change_level":{
+                            "level":"tutorial_outside",
+                            "location":{ "x": 86, "y": 16},
+                            "tile": "D1"
+                        }
+                    }
                 ],
                 "one_time":False
             }
-        ]
+        }
     }

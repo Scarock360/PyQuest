@@ -233,7 +233,7 @@ CLASS_INDEX={
                 }
             },
             "Quint Attack":{
-                "ability_id":"Quad Attack",
+                "ability_id":"Quint Attack",
                 "description":"Quint Attack means you can hit five times when attacking.",
                 "effect":{
                     "increase" :{
@@ -249,40 +249,195 @@ CLASS_INDEX={
             }
         }
     },
-    "Arcane":{
-        "class_id": "Arcane",
+    "Elemental":{
+        "class_id": "Elemental",
         "class_name":"Mage",
         "type": "Base",
         "nodes": {
-            "Arcane-1":{
-                "ability_id":"Arcane-1",
+            "Chill":{
+                "ability_id":"Chill",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "skills": ["Chill"]
+                },
+                "requirements":{}
+            },
+            "Freeze":{
+                "ability_id":"Freeze",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "skills": ["Freeze"],
+                    "increase_flag":{
+                        "Cold Adept": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Chill"]}
+                }
+            },
+            "Tsunami":{
+                "ability_id":"Tsunami",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Freeze"]}
+                }
+            },
+            "Spark":{
+                "ability_id":"Spark",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{}
             },
-            "Arcane-2":{
-                "ability_id":"Arcane-2",
+            "Heat":{
+                "ability_id":"Heat",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Spark"]}
+                }
+            },
+            "Flare":{
+                "ability_id":"Flare",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Heat"]}
+                }
+            },
+            "Gust":{
+                "ability_id":"Gust",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "skills": ["Shunt"]
+                },
                 "requirements":{}
             },
-            "Arcane-3":{
-                "ability_id":"Arcane-3",
+            "Thunder":{
+                "ability_id":"Thunder",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "increase_flag":{
+                        "Wind Adept": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Gust"]}
+                }
+            },
+            "Kinetic":{
+                "ability_id":"Kinetic",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Thunder"]}
+                }
+            },
+            "Rock and Stone":{
+                "ability_id":"Rock and Stone",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "skills": ["Toss rock"],
+                },
                 "requirements":{}
             },
-            "Arcane-4":{
-                "ability_id":"Arcane-4",
+            "Quake":{
+                "ability_id":"Quake",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
-                "requirements":{}
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Rock and Stone"]}
+                }
             },
-            "Arcane-5":{
-                "ability_id":"Arcane-5",
+            "Steel":{
+                "ability_id":"Steel",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "skills": ["Javelin"],
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Quake"]}
+                }
+            },
+            "Mirage":{
+                "ability_id":"Mirage",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
-                "requirements":{}
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Tsunami","Heat"]}
+                }
+            },
+            "Spirit":{
+                "ability_id":"Spirit",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Flare","Freeze"]}
+                }
+            },
+            "Energy":{
+                "ability_id":"Energy",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Flare","Thunder"]}
+                }
+            },
+            "Detonation":{
+                "ability_id":"Detonation",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Kinetic","Heat"]}
+                }
+            },
+            "Gravity":{
+                "ability_id":"Gravity",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Kinetic","Quake"]}
+                }
+            },
+            "Magnetic":{
+                "ability_id":"Magnetic",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Steel","Thunder"]}
+                }
+            },
+            "Crystal":{
+                "ability_id":"Crystal",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Steel","Thunder"]}
+                }
+            },
+            "Pressure":{
+                "ability_id":"Pressure",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{},
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Tsunami","Quake"]}
+                }
             },
         }
     },
@@ -575,48 +730,128 @@ CLASS_INDEX={
             },
         }
     },
-    "Spell Sword":{
-        "class_id": "Spell Sword",
-        "class_name":"Spell Sword",
+    "Enchanter":{
+        "class_id": "Enchanter",
+        "class_name":"Enchanter",
         "type": "Prestige",
-        "required_base" : ["Martial","Arcane"],
+        "required_base" : ["Martial","Elemental"],
         "nodes":{
-            "True Spell Sword":{
-                "ability_id":"True Spell Sword",
+            "True Enchanter":{
+                "ability_id":"True Enchanter",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
-                    "description":"Requires 5 Martial and Arcane abilities.",
+                    "description":"Requires 5 Martial and Elemental abilities.",
                     "Investment" : {
                         "Martial": 5,
-                        "Arcane": 5,
+                        "Elemental": 5,
                     }
                 }
             },
-            "ss-1":{
-                "ability_id":"ss-1",
+            "Mirage Enchantment":{
+                "ability_id":"Mirage Enchantment",
                 "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
+                "effect":{
+                    "increase_flag":{
+                        "Mirage Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Mirage"]}
+                }
             },
-            "ss-2":{
-                "ability_id":"ss-2",
+            "Spirit Enchantment":{
+                "ability_id":"Spirit Enchantment",
                 "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
+                "effect":{
+                    "increase_flag":{
+                        "Spirit Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Spirit"]}
+                }
             },
-            "ss-3":{
-                "ability_id":"ss-3",
+            "Energy Enchantment":{
+                "ability_id":"Energy Enchantment",
                 "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
+                "effect":{
+                    "increase_flag":{
+                        "Energy Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Energy"]}
+                }
             },
-            "ss-4":{
-                "ability_id":"ss-4",
+            "Detonation Enchantment":{
+                "ability_id":"Detonation Enchantment",
                 "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{}
-            }
+                "effect":{
+                    "increase_flag":{
+                        "Detonation Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Detonation"]}
+                }
+            },
+            "Gravity Enchantment":{
+                "ability_id":"Gravity Enchantment",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "increase_flag":{
+                        "Gravity Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Gravity"]}
+                }
+            },
+            "Magnetic Enchantment":{
+                "ability_id":"Magnetic Enchantment",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "increase_flag":{
+                        "Magnetic Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Magnetic"]}
+                }
+            },
+            "Crystal Enchantment":{
+                "ability_id":"Crystal Enchantment",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "increase_flag":{
+                        "Crystal Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Crystal"]}
+                }
+            },
+            "Pressure Enchantment":{
+                "ability_id":"Pressure Enchantment",
+                "description":"PLACEHOLDER DESCRIPTION",
+                "effect":{
+                    "increase_flag":{
+                        "Pressure Enchantment": 1
+                    }
+                },
+                "requirements":{
+                    "description":"",
+                    "previous_nodes": { "all_of" : ["Balanced Stance","Pressure"]}
+                }
+            },
         }
     },
     "Paladin":{
@@ -667,17 +902,17 @@ CLASS_INDEX={
         "class_id": "Magus",
         "class_name":"Magus",
         "type": "Prestige",
-        "required_base" : ["Divine","Arcane"],
+        "required_base" : ["Divine","Elemental"],
         "nodes":{
             "True Magus":{
                 "ability_id":"True Magus",
                 "description":"PLACEHOLDER DESCRIPTION",
                 "effect":{},
                 "requirements":{
-                    "description":"Requires 5 Arcane and Divine abilities.",
+                    "description":"Requires 5 Elemental and Divine abilities.",
                     "Investment" : {
                         "Divine": 5,
-                        "Arcane": 5,
+                        "Elemental": 5,
                     }
                 }
             },

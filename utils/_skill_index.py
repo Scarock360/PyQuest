@@ -41,7 +41,7 @@ SKILL_INDEX={
         "cooldown": 0
     },
     "Lunge":{
-        "tags":["battle","temp_buff","attack"],
+        "tags":["battle","temp_buff","attack","weapon"],
         "name": "Lunge",
         "description":"Perform a reckless attack that leaves you vulnerable.",
         "temp_buff":{
@@ -56,7 +56,7 @@ SKILL_INDEX={
         "cooldown":0
     },
     "Thrust":{
-        "tags":["battle","temp_buff","attack"],
+        "tags":["battle","temp_buff","attack","weapon"],
         "name": "Thrust",
         "description":"Perform a weaker but precise attack.",
         "temp_buff":{
@@ -83,7 +83,7 @@ SKILL_INDEX={
         "cooldown":0
     },
     "Execute":{
-        "tags":["battle","temp_buff","attack"],
+        "tags":["battle","temp_buff","attack","weapon"],
         "name": "Execution Technique",
         "description":"Perform a single powerful precise attack.",
         "temp_buff":{
@@ -98,7 +98,7 @@ SKILL_INDEX={
         "cooldown":2
     },
     "Exploit":{
-        "tags":["battle","attack"],
+        "tags":["battle","attack","weapon"],
         "name": "Execution Technique",
         "description":"Perform a single powerful precise attack.",
         "attack":{
@@ -122,8 +122,72 @@ SKILL_INDEX={
         },
         "cooldown":2
     },
-    # Arcane
-    
+    # Elemental
+    "Chill":{
+        "tags":["battle","attack"],
+        "name": "Chill",
+        "description":"Drop the temperature of a creature severely.",
+        "attack":{
+            "count":1,
+            "damage": "1d8",
+            "damage_type": "Cold",
+            "accuracy": 150,
+            "can_crit": False
+        },
+        "cooldown": 3
+    },
+    "Freeze":{
+        "tags":["battle","attack"],
+        "name": "Freeze",
+        "description":"Drop the temperature of a creature far below zero.",
+        "attack":{
+            "count":1,
+            "damage": "2d6",
+            "damage_type": "Cold",
+            "accuracy": 150,
+            "can_crit": False
+        },
+        "cooldown": 3
+    },
+    "Shunt":{
+        "tags":["battle","attack"],
+        "name": "Shunt",
+        "description":"Blast a creature with a heavy wind.",
+        "attack":{
+            "count":1,
+            "damage": "1d1",
+            "damage_type": "Wind",
+            "accuracy": 150,
+            "can_crit": False
+        },
+        "cooldown": 3
+    },
+    "Toss rock":{
+        "tags":["battle","attack"],
+        "name": "Toss rock",
+        "description":"Throw a god damn rock at them.",
+        "attack":{
+            "count":1,
+            "damage": "1d8",
+            "damage_type": "Earth",
+            "accuracy": 150,
+            "can_crit": False
+        },
+        "cooldown": 3
+    },
+    "Javelin":{
+        "tags":["battle","attack","penetrating"],
+        "name": "Javelin",
+        "description":"Launch an iron javelin at an enemy.",
+        "attack":{
+            "count":1,
+            "damage": "1d1",
+            "damage_type": "Earth",
+            "accuracy": 150,
+            "can_crit": False
+        },
+        "cooldown": 4
+    },
     # Divine
     "Heal":{
         "tags":["map", "battle", "restorative"],

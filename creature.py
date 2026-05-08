@@ -3,7 +3,7 @@ from utils._skill_index import SKILL_INDEX
 from utils._flag_index import FLAG_INDEX
 from utils._item_index import ITEM_INDEX
 from utils._class_index import CLASS_INDEX
-from utils.utils import RED,YELLOW,GREEN,hr,vt,tl,tr,bl,br,FULL_BLOCK,HALF_BLOCK,EMPTY_BLOCK,ENDC,roll, WHITE
+from utils.utils import RED,YELLOW,GREEN,hr,vt,tl,tr,bl,br,FULL_BLOCK,HALF_BLOCK,EMPTY_BLOCK,ENDC,roll, WHITE,CYAN, BG_FROM_COLOUR, raw_text
 from utils._creature_index import CREATURE_INDEX
 from functools import partial
 import random
@@ -33,7 +33,7 @@ class Creature:
     level=1
 
     stat_points = 5
-    class_points = 10
+    class_points = 20
 
     class_levels = {}
 
@@ -61,6 +61,7 @@ class Creature:
             boss=False,
             level=1,
         ):
+        # Basic stats
         self.base_stats = {
             "max_hit_points":max_hit_points,
             "power":power,
@@ -85,7 +86,9 @@ class Creature:
         self.limited_skills  = {s:SKILL_INDEX[s]["uses"] for s in skills if "uses" in SKILL_INDEX[s]}
         self.actions = actions
         self.boss = boss
+        self.additional_attack_tags = []
 
+        # Equipment
         self.main_hand = None
         self.off_hand = None
         self.head = None
@@ -94,19 +97,19 @@ class Creature:
         self.ring_1 = None
         self.ring_2 = None
 
+        # Level up stats
         self.true_prestige = False
-
         self.exp=0
-
-        self.stat_points = 5
-        self.class_points = 10
-
+        self.stat_points = 5 + 2*level
+        self.class_points = 1*level
         self.class_levels = {}
-
         self.class_investment = {}
         self.acquired_skills = []
-
         self.end_of_turn_events = []
+
+        # other stats
+        self.temp_hitpoints = 0
+        self.acceleration = 0
 
     @classmethod
     def from_index(cls,index, boss_name_override=None, level=1):
@@ -200,27 +203,87 @@ class Creature:
     def get_flag(self,flag):
         return self.flags.get(flag,0)
 
-    def attack(self, foe, damage_override=None, type_override=None, accuracy_override=None, count_override=None, can_crit=True):
-        """attack"""
-        attack_roll = roll("1d100")-self.agility+foe.agility
-        attack_count = self.attack_count if count_override is None else count_override
-        if attack_roll < (self.accuracy if accuracy_override is None else accuracy_override ):
-            damage_roll = self.attack_string if damage_override is None else damage_override
-            damage_type = self.attack_type if type_override is None else type_override
-            damage_delt = [foe.take_damage(roll(damage_roll) + self.power, damage_type) for _ in range(attack_count)]
-            if attack_count == 1:
-                return f"{self.name} deals {damage_delt[0]} {damage_type} damage to {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}\n"
-            total_damage = 0
-            for i in range(len(damage_delt)):
-                total_damage += damage_delt[i]
-            return f"{self.name} deals {','.join([f'{dd}' for dd in damage_delt])} {damage_type} damage\nfor a total of {total_damage} to {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}"
-        return f"{self.name} missed {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}\n"
+    def check_dual_wield(self):
+        if self.get_flag("Dual Wield") <= 0 or self.off_hand is None:
+            return None
+        oh_detail = ITEM_INDEX[self.off_hand]
+        tags = oh_detail["tags"]
+        if "shield" in tags and self.get_flag("Shield Master") <= 0:
+            return None
+        if "weapon" in oh_detail:
+            return oh_detail
+        return None
 
-    def take_damage(self, damage, damage_type="un-typed"):
+    def attack(self, foe, tags=None, damage_override=None, type_override=None, accuracy_override=None, count_override=None, can_crit=True):
+        """attack"""
+        attack_tags=[]
+        attack_tags.extend(tags or [])
+        attack_tags.extend(self.additional_attack_tags)
+
+        attack_count = count_override or self.attack_count
+
+        mh_damage_type =  type_override or self.attack_type
+        mh_damage_roll = damage_override or self.attack_string
+        mh_accuracy = accuracy_override or self.accuracy
+
+        oh_detail = None
+        if "weapon" in attack_tags:
+            oh_detail = self.check_dual_wield()
+            if oh_detail is not None:
+                oh_damage_type = type_override or oh_detail["weapon"]["damage_type"]
+                oh_damage_roll = damage_override or oh_detail["weapon"]["damage"]
+                oh_accuracy = accuracy_override or oh_detail["weapon"]["accuracy"]
+
+        self.pre_attack(foe,mh_damage_type)
+
+        damage_delt = []
+        for _ in range(attack_count):
+            damage_delt.extend(self._attack(foe,attack_tags,mh_accuracy,mh_damage_roll,mh_damage_type))
+            if oh_detail is not None:
+                damage_delt.extend(self._attack(foe,attack_tags,oh_accuracy,oh_damage_roll,oh_damage_type))
+        match len(damage_delt):
+            case 0:
+                return f"{self.name} missed {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}\n"
+            case 1:
+                return f"{self.name} deals {damage_delt[0]} {mh_damage_type} damage to {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}\n"
+            case _:
+                total_damage = 0
+                for i in damage_delt:
+                    total_damage += i
+                return f"{self.name} deals {','.join([f'{dd}' for dd in damage_delt])} {mh_damage_type} damage\nfor a total of {total_damage} to {'the ' if not foe.boss else ''}{RED}{foe.name}{ENDC}"
+
+    def _attack(self,foe,attack_tags,accuracy,damage_die,damage_type):
+        damage_delt = []
+        attack_roll = roll("1d100")-self.agility+foe.agility
+        if attack_roll < accuracy:
+            damage_delt.append(foe.take_damage(roll(damage_die) + self.power, attack_tags, damage_type))
+        return damage_delt
+
+    def pre_attack(self, foe, damage_type):
+        match damage_type:
+            case "Cold":
+                if self.get_flag("Cold Adept")>0:
+                    self.temp_hitpoints += self.get_class_level("Elemental")
+                    self.temp_hitpoints = min(self.temp_hitpoints, self.max_hit_points)
+            case "Wind":
+                if self.get_flag("Wind Adept")>0:
+                    self.acceleration += self.get_class_level("Elemental")
+
+    def take_damage(self, damage, tags, damage_type="un-typed"):
         """damage"""
-        damage_taken = damage * self.resistances.get(damage_type, 1)
-        damage_taken = 0 if damage_taken == 0 else max(1,damage_taken-self.resilience)
-        self.hit_points -= damage_taken
+        damage_taken = damage * self.resistances.get("ALL", 1)
+        damage_taken = damage_taken * self.resistances.get(damage_type, 1)
+        if damage_taken > 0:
+            damage_taken -= 0 if "penetrating" in tags else self.resilience
+            damage_taken = max(damage_taken, 1)
+            damage_taken = math.floor(damage_taken)
+        else:
+            damage_taken = 0
+
+        self.temp_hitpoints -= damage_taken
+        if self.temp_hitpoints < 0:
+            self.hit_points += self.temp_hitpoints
+            self.temp_hitpoints = 0
         self.hit_points = max(self.hit_points,0)
         return damage_taken
 
@@ -252,8 +315,29 @@ class Creature:
             hp = f"{hp}{EMPTY_BLOCK*(bar_length - 1 - greater)}"
             colour = GREEN if greater > math.floor(bar_length/2) else YELLOW if greater > math.floor(bar_length/5) else RED
 
+            
+        temp_hp_percent = self.temp_hitpoints/self.max_hit_points
+        greater = (temp_hp_percent*bar_length).__floor__()
+        if greater == bar_length:
+            temp_hp = f"{FULL_BLOCK*greater}"
+        else:
+            if temp_hp_percent > 0:
+                lesser = ((temp_hp_percent*bar_length) - greater)*bar_length
+                final_block = EMPTY_BLOCK if lesser == 0 else HALF_BLOCK if lesser < 6 else FULL_BLOCK
+                temp_hp = f"{FULL_BLOCK*greater}{final_block}"
+                temp_hp = f"{temp_hp}"
+            else:
+                temp_hp = ""
+
         top = f"{self.box_colour}{tl}{hr}{self.name}{hr*(bar_length - 1 - len(self.name))}{tr}{ENDC}"
-        hp_bar = f"{self.box_colour}{vt}{colour}{hp}{self.box_colour}{vt}{ENDC}"
+
+        hp_bar = f"{self.box_colour}{vt}{BG_FROM_COLOUR[colour]}{CYAN}{temp_hp}{ENDC}{colour}{hp[len(temp_hp):]}{self.box_colour}{vt}{ENDC}"
+
+        # hp_bar_2 = f"{self.box_colour}{vt}{colour}{hp}{self.box_colour}{vt}{ENDC}"
+
+
+
+
         bottom = f"{self.box_colour}{bl}{hr*bar_length}{br}{ENDC}"
         return "\n".join([top, hp_bar, bottom])
 
@@ -387,6 +471,14 @@ class Creature:
             self.exp -= (self.level) * EXP_TO_LEVEL
             level_ups += 1
         if level_ups > 0:
+            self.base_stats["max_hit_points"] += 5
+            self.max_hit_points += 5
+            self.base_stats["power"] += 1
+            self.power += 1
+            self.base_stats["resilience"] += 1
+            self.resilience += 1
+            self.base_stats["agility"] += 1
+            self.agility += 1
             self.level += level_ups
             self.stat_points += level_ups * 2
             self.class_points += level_ups

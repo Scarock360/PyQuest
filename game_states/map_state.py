@@ -1,7 +1,6 @@
 import sys,inspect
 sys.path.insert(0,"../PyQuest\\game_states" )
 sys.path.insert(0,"../PyQuest\\resources" )
-from utils import utils
 from utils.utils import GREEN,YELLOW,ENDC,RED,BRIGHT_GREEN, MAGENTA
 from game_state import AbstractGameState
 from maps.abstract_level import abstract_level
@@ -48,7 +47,9 @@ class MapState(AbstractGameState):
     def load_level_from_file(cls, level, start_location_override = None):
         if level not in cls.previously_visited:
             cls.previously_visited[level] = MapObject(cls,level,start_location_override)
-        cls.current_level = cls.previously_visited[level].update_location(start_location_override)
+        cls.current_level = cls.previously_visited[level].update_location(
+            cls.previously_visited[level].getLocationOf(start_location_override)
+        )
 
     @classmethod
     def handle_menu_event(cls, event):
@@ -113,7 +114,7 @@ class MapState(AbstractGameState):
             if "change_level" in event:
                 cls.load_level_from_file(
                     event["change_level"]["level"],
-                    event["change_level"]["location"]
+                    event["change_level"]["tile"]
                 )
         if interaction["one_time"]:
             cls.current_level.interaction_register[interaction["location"]["y"]].pop(interaction["location"]["x"])

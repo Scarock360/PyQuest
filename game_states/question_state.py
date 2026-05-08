@@ -40,12 +40,13 @@ class QuestionState(AbstractGameState):
 
     @classmethod
     def handle_menu_event(cls,event):
-        list(cls.options.items())[cls.selected_item][1]()
+        #list(cls.options.items())[cls.selected_item][1]()
+        cls.options[cls.selected_item][1]()
 
     @classmethod
     def generate_display(cls):
 
-        answers = "".join([f"{'  ' if i != cls.selected_item else '➤ '}{a}" for i,a in enumerate(list(cls.options.keys()))])
+        answers = "".join([f"{'  ' if i != cls.selected_item else '➤ '}{a[0]}" for i,a in enumerate(cls.options)])
 
         view = f"{cls.question}\n{answers}"
 

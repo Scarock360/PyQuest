@@ -85,7 +85,7 @@ class BattleState(AbstractGameState):
         match event:
             case "Attack":
                 cls.combat_log.append(
-                    cls.actors[cls.turn_tracker].attack(cls.enemies[cls.selected_enemy])
+                    cls.actors[cls.turn_tracker].attack(cls.enemies[cls.selected_enemy],["weapon"])
                 )
                 cls.combat_log_selected = -1
                 cls.end_turn()

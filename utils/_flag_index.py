@@ -28,6 +28,18 @@ FLAG_INDEX = {
     "Dual Wield":{
         "tags":[]
     },
+    "Earth Adept":{
+        "tags":[]
+    },
+    "Wind Adept":{
+        "tags":[]
+    },
+    "Fire Adept":{
+        "tags":[]
+    },
+    "Cold Adept":{
+        "tags":[]
+    }
     # "":{},
     # "":{},
     # "":{},

@@ -72,11 +72,12 @@ class SkillsState(AbstractGameState):
             cls.GAME.states[cls.previous_state].generate_display()
 
     @classmethod
-    def attack(cls,attack_detail, name):
+    def attack(cls,attack_detail, name, tags):
         cls.GAME.change_state(cls.previous_state)
         cls.GAME.states["battle"].combat_log.append(
             cls.creature.attack(
                 cls.GAME.states["battle"].enemies[cls.GAME.states["battle"].selected_enemy],
+                tags = tags,
                 damage_override = attack_detail.get("damage",None),
                 type_override = attack_detail.get("damage_type",None),
                 accuracy_override = attack_detail.get("accuracy",None),
@@ -110,16 +111,16 @@ class SkillsState(AbstractGameState):
                                     setattr(cls.creature,k,getattr(cls.creature,k)-value)
                         if skill_detail["temp_buff"].get("then",False):
                             if "attack" in skill_detail["temp_buff"]["then"]:
-                                cls.attack(skill_detail["temp_buff"]["then"]["attack"],skill_detail['name'])
+                                cls.attack(skill_detail["temp_buff"]["then"]["attack"],skill_detail['name'], skill_detail['tags'])
                         else:
                             cls.GAME.states["battle"].combat_log_selected = -1
                             cls.GAME.states["battle"].end_turn()
 
                     elif "attack" in skill_detail["tags"]:
-                        cls.attack(skill_detail["attack"],skill_detail['name'])
+                        cls.attack(skill_detail["attack"],skill_detail['name'],skill_detail['tags'])
                     elif "restorative" in skill_detail["tags"]:
-                        options = {v.name:partial(cls._use_restorative,cls.creature,skill_detail,v) for _,v in cls.GAME.party.items()}
-                        options["Cancel"] = partial(cls.GAME.change_state,"inventory")
+                        options = [(v.name,partial(cls._use_restorative,cls.creature,skill_detail,v)) for k,v in cls.GAME.party.items()]
+                        options.append(("Cancel",partial(cls.GAME.change_state,cls.previous_state)))
                         
                         cls.GAME.states["question"].pre_shift(
                             "battle",

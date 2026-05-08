@@ -37,14 +37,10 @@ class TitleState(AbstractGameState):
                 cls.GAME.states["map"].previously_visited={}
                 cls.GAME.states["map"].load_level_from_file("tutorial")
                 cls.GAME.party = {"hero": Creature("Hero",20,2,2,2,"1d3","Smash",100,{},[])}
-                #cls.GAME.party = {"hero": Creature("Hero",20,2,2,2,"1d3","Smash",100,{},list(SKILL_INDEX.keys()))}
                 
                 #cls.GAME.party["hero"].level = 20
-                cls.GAME.inventory = {"Lesser Potion":5}
+                #cls.GAME.inventory = {"Lesser Potion":5}
                 #cls.GAME.inventory = {k:10 for k,_ in ITEM_INDEX.items()}
-                # cls.GAME.party["hero"].flags["Powerful Hands"] = 2
-                # cls.GAME.party["hero"].flags["Shield Master"] = 2
-                # cls.GAME.party["hero"].flags["Dual Wield"] = 2
                 cls.GAME.update_health_bars()
                 cls.GAME.change_state("map")
             case "Exit":
