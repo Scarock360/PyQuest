@@ -33,8 +33,6 @@ class Game:
 
     current_state = TitleState
 
-    inventory = {}
-
     party = {}
     dialog_box = ""
     _party = "            "
@@ -78,7 +76,6 @@ class Game:
             p = [f"{vt}{l}{vt}" for l in cls._party.split("\n")]
             while len(p) < 9:
                 p.append(f"{vt}{' '*12}{vt}")
-
             party = "\n".join(p)
             seperator = f"{lt}{hr*3}MENUS{hr*4}{rt}"
             menu = "\n".join([f"{vt}{l}{' '*(12-text_len(l))}{vt}" for l in cls._menu_selector.getView()])
@@ -134,8 +131,6 @@ class Game:
             print("\033[17;0H")
             raise e
 
-
-
     @classmethod
     def process_release(cls,key):
         if key in cls._pressed:
@@ -149,22 +144,11 @@ class Game:
 
     @classmethod
     def add_item(cls,item,count=1):
-        if item is None:
-            return
-        if item not in cls.inventory:
-            cls.inventory[item] = 0
-        cls.inventory[item] += count
-        cls.inventory[item] = min(cls.inventory[item],999)
+        cls.party[list(cls.party)[0]].add_item(item,count)
 
     @classmethod
     def remove_item(cls,item,count=1):
-        if item is None:
-            return
-        cls.inventory[item] -= count
-        if cls.inventory[item] < 0:
-            pass
-        if cls.inventory[item] == 0:
-            cls.inventory.pop(item)
+        cls.party[list(cls.party)[0]].remove_item(item,count)
 
     @classmethod
     def update_health_bars(cls):

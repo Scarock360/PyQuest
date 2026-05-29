@@ -76,13 +76,13 @@ class SkillsState(AbstractGameState):
         cls.GAME.change_state(cls.previous_state)
         cls.GAME.states["battle"].combat_log.append(
             cls.creature.attack(
-                cls.GAME.states["battle"].enemies[cls.GAME.states["battle"].selected_enemy],
+                cls.GAME.states["battle"].enemies,
+                cls.GAME.states["battle"].selected_enemy,
                 tags = tags,
                 damage_override = attack_detail.get("damage",None),
                 type_override = attack_detail.get("damage_type",None),
                 accuracy_override = attack_detail.get("accuracy",None),
                 count_override = attack_detail.get("count",None),
-                can_crit = attack_detail.get("can_crit",True),
             ) + f" with {name}."
         )
         cls.GAME.states["battle"].combat_log_selected = -1

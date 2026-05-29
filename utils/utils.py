@@ -1,4 +1,5 @@
 import random
+import regex
 
 tl = '╔'
 tr = '╗'
@@ -148,3 +149,49 @@ def chunks(lst, n):
 
 def question(question_text: str,options: dict,):
     return options[0]
+
+
+
+def calculate(equation:str) -> int:
+    equation = _brackets(equation)
+    equation = _abstract_equation(equation,{
+        "d":lambda nums: f"{sum([random.Random().randint(1,int(nums[1])) for _ in range(int(nums[0]))])}"
+    })
+    equation = _abstract_equation(equation,{
+        "^":lambda nums: f"{pow(nums[0],nums[1])}"
+    })
+    equation = _abstract_equation(equation,{
+        "*":lambda nums: f"{nums[0]*nums[1]}",
+        "/":lambda nums: f"{nums[0]/nums[1]}"
+    })
+    equation = _abstract_equation(equation,{
+        "+":lambda nums: f"{nums[0]+nums[1]}",
+        "-":lambda nums: f"{nums[0]-nums[1]}"
+    })
+    return int(float(equation))
+
+def _brackets(equation:str):
+    for bracketed_section in regex.findall(r"\((?:[^\(\)]|(?R))*\)",equation):
+        replacement = calculate(bracketed_section[1:-1])
+        equation = equation.replace(bracketed_section,replacement,1)
+    return equation
+
+def _abstract_equation(equation, operations):
+    number_pattern = r"(?:(?:(?<![0-9])-\d+|\d+)(?:\.\d+){0,1})"
+    pattern = f"{number_pattern}[{''.join(operations.keys())}]{number_pattern}"
+    pattern = pattern.replace("^","\\^")
+    while True:
+        matches = regex.findall(pattern,equation)
+        if len(matches) == 0:
+            break
+        for match in matches:
+            for k, v in operations.items():
+                if k in match:
+                    nums = regex.findall(number_pattern,match)
+                    replacement = v([float(nums[0]),float(nums[1])])
+                    equation = equation.replace(match,replacement)
+                    break
+    return equation
+
+# for e in ["7+4^5-4", "4-5.1", "2.6+2.5"]:
+#     print(f"{e} = {calculate(e)}")

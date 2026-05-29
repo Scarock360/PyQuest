@@ -8,8 +8,7 @@ from utils.utils import vt, hr, tt, bt,tl,tr,bl,br, BOLD, UNDRLN, ENDC, RED, GRE
 
 class EquipmentState(AbstractGameState):
     menu_options = [
-        "Equip",
-        "Back"
+        "Inspect"
     ]
 
     gear_type_selection = {"min":0,"c":0,"max":6}
@@ -48,9 +47,21 @@ class EquipmentState(AbstractGameState):
                 else:
                     cls.change_gear_type_selection(-1)
             case "'d'":
-                pass#cls.change_selection(1)
+                if cls.gear_type:
+                    new_item = cls.gear_list[cls.gear_selection["c"]]
+                    cls.GAME.remove_item(new_item)
+                    for old_item in list(cls.GAME.party.items())[0][1].equip(cls.gear_type_selection["c"],new_item):
+                        cls.GAME.add_item(old_item)
+                    cls.gear_type = None
+                    cls.generate_display()
+                else:
+                    cls.set_gear_type()
             case "'a'":
-                pass#cls.change_selection(-1)
+                if cls.gear_type:
+                    cls.gear_type = None
+                    cls.generate_display()
+                else:
+                    cls.GAME.change_state(cls.previous_state)
             case "'s'":
                 if cls.gear_type:
                     cls.change_gear_selection(1)
@@ -91,22 +102,8 @@ class EquipmentState(AbstractGameState):
     @classmethod
     def handle_menu_event(cls,event):
         match event:
-            case "Equip":
-                if cls.gear_type:
-                    new_item = cls.gear_list[cls.gear_selection["c"]]
-                    cls.GAME.remove_item(new_item)
-                    for old_item in list(cls.GAME.party.items())[0][1].equip(cls.gear_type_selection["c"],new_item):
-                        cls.GAME.add_item(old_item)
-                    cls.gear_type = None
-                    cls.generate_display()
-                else:
-                    cls.set_gear_type()
-            case "Back":
-                if cls.gear_type:
-                    cls.gear_type = None
-                    cls.generate_display()
-                else:
-                    cls.GAME.change_state(cls.previous_state)
+            case "Inspect":
+                pass
 
     @classmethod
     def set_gear_type(cls):

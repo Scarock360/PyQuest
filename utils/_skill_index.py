@@ -124,20 +124,55 @@ SKILL_INDEX={
     },
     # Elemental
     "Chill":{
-        "tags":["battle","attack"],
+        "tags":["battle","attack","spell","frost:Elemental"],
         "name": "Chill",
         "description":"Drop the temperature of a creature severely.",
         "attack":{
             "count":1,
-            "damage": "1d8",
+            "damage": "2d2",
             "damage_type": "Cold",
             "accuracy": 150,
-            "can_crit": False
+        },
+        "cooldown": 3
+    },
+    "Spark":{
+        "tags":["battle","attack","spell","burn:Elemental"],
+        "name": "Spark",
+        "description":"Shower an enemy in super heated sparks.",
+        "attack":{
+            "count":1,
+            "damage": "3d2",
+            "damage_type": "Fire",
+            "accuracy": 150,
+        },
+        "cooldown": 2
+    },
+    "Shunt":{
+        "tags":["battle","attack","spell","haste:Elemental"],
+        "name": "Shunt",
+        "description":"Blast a creature with a heavy wind.",
+        "attack":{
+            "count":1,
+            "damage": "1d10",
+            "damage_type": "Wind",
+            "accuracy": 150,
+        },
+        "cooldown": 3
+    },
+    "Toss rock":{
+        "tags":["battle","attack","spell","stun:Elemental"],
+        "name": "Toss rock",
+        "description":"Throw a god damn rock at them.",
+        "attack":{
+            "count":1,
+            "damage": "5",
+            "damage_type": "Earth",
+            "accuracy": 150,
         },
         "cooldown": 3
     },
     "Freeze":{
-        "tags":["battle","attack"],
+        "tags":["battle","attack","spell","frost:Elemental"],
         "name": "Freeze",
         "description":"Drop the temperature of a creature far below zero.",
         "attack":{
@@ -145,33 +180,6 @@ SKILL_INDEX={
             "damage": "2d6",
             "damage_type": "Cold",
             "accuracy": 150,
-            "can_crit": False
-        },
-        "cooldown": 3
-    },
-    "Shunt":{
-        "tags":["battle","attack"],
-        "name": "Shunt",
-        "description":"Blast a creature with a heavy wind.",
-        "attack":{
-            "count":1,
-            "damage": "1d1",
-            "damage_type": "Wind",
-            "accuracy": 150,
-            "can_crit": False
-        },
-        "cooldown": 3
-    },
-    "Toss rock":{
-        "tags":["battle","attack"],
-        "name": "Toss rock",
-        "description":"Throw a god damn rock at them.",
-        "attack":{
-            "count":1,
-            "damage": "1d8",
-            "damage_type": "Earth",
-            "accuracy": 150,
-            "can_crit": False
         },
         "cooldown": 3
     },
@@ -184,7 +192,6 @@ SKILL_INDEX={
             "damage": "1d1",
             "damage_type": "Earth",
             "accuracy": 150,
-            "can_crit": False
         },
         "cooldown": 4
     },
@@ -205,7 +212,6 @@ SKILL_INDEX={
             "damage": "1d4",
             "damage_type": "Holy",
             "accuracy": 150,
-            "can_crit": False
         },
         "cooldown": 0
     },
@@ -235,7 +241,6 @@ SKILL_INDEX={
             "damage": "{Divine}d4",
             "damage_type": "Vamp",
             "accuracy": 150,
-            "can_crit": False
         },
         "cooldown": 2
     },

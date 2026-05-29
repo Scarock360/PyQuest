@@ -39,6 +39,30 @@ FLAG_INDEX = {
     },
     "Cold Adept":{
         "tags":[]
+    },
+    "burn":{
+        "tags":["status"]
+    },
+    "stun":{
+        "tags":["status"]
+    },
+    "magnetic":{
+        "tags":["status"]
+    },
+    "mirage":{
+        "tags":["status"]
+    },
+    "pressure":{
+        "tags":["status"]
+    },
+    "poison":{
+        "tags":["status"]
+    },
+    "energy":{
+        "tags":["status"]
+    },
+    "haste":{
+        "tags":["status"]
     }
     # "":{},
     # "":{},
