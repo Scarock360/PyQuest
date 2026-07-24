@@ -84,7 +84,7 @@ class tutorial(abstract_level):
                 "enemies":[{
                     "creature":"Clown",
                     "boss_name":"Bozo, the Swamp Clown",
-                    "level":1
+                    "level":2
                 }]
             },
             "B2":{

@@ -50,7 +50,7 @@ class EquipmentState(AbstractGameState):
                 if cls.gear_type:
                     new_item = cls.gear_list[cls.gear_selection["c"]]
                     cls.GAME.remove_item(new_item)
-                    for old_item in list(cls.GAME.party.items())[0][1].equip(cls.gear_type_selection["c"],new_item):
+                    for old_item in cls.GAME.party[0].equip(cls.gear_type_selection["c"],new_item):
                         cls.GAME.add_item(old_item)
                     cls.gear_type = None
                     cls.generate_display()
@@ -107,7 +107,7 @@ class EquipmentState(AbstractGameState):
 
     @classmethod
     def set_gear_type(cls):
-        cls.gear_types = cls.GAME.party["hero"].get_valid_gear()
+        cls.gear_types = cls.GAME.party[0].get_valid_gear()
         cls.gear_type = cls.gear_types[cls.gear_type_selection["c"]]
         cls.gear_list = [None]
         for g_type in cls.gear_type:
@@ -196,7 +196,7 @@ class EquipmentState(AbstractGameState):
 
     @classmethod
     def generate_display(cls):
-        player = list(cls.GAME.party.items())[0][1]
+        player = cls.GAME.party[0]
         view_1 = cls.generate_stats(player)
         view_2 = cls.generate_gear(player)
 

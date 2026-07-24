@@ -53,6 +53,11 @@ ITEM_INDEX={
         "weapon": {"damage":"1d12","accuracy": 90,"damage_type":"Slash"},
         "Description": "A Battle axe forged for war.\nAs a weapon it deals 2d6 slashing damage."
     },
+    "Cinder Blade":{
+        "tags":["2h_weapon","burn:2"],
+        "weapon": {"damage":"1d12","accuracy": 90,"damage_type":"Fire"},
+        "Description": "A smouldering blade of stone.\nAs a weapon it deals 2d4 Fire damage."
+    },
     # endregion
     # region  ------ ARMOUR
     "Simple shield":{

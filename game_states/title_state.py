@@ -36,9 +36,9 @@ class TitleState(AbstractGameState):
             case "New":
                 cls.GAME.states["map"].previously_visited={}
                 cls.GAME.states["map"].load_level_from_file("tutorial")
-                cls.GAME.party = {"hero": Creature("Hero",20,2,2,2,"1d3","Smash",100,{},[])}
-                cls.GAME.inventory = cls.GAME.party["hero"].inventory
-                #cls.GAME.party["hero"].level = 20
+                cls.GAME.party = [Creature("Hero",20,2,2,2,"1d3","Smash",100,{},[])]
+                cls.GAME.inventory = cls.GAME.party[0].inventory
+                #cls.GAME.party[0].level = 20
                 #cls.GAME.inventory = {"Lesser Potion":5}
                 #temp_inventory = {k:10 for k,_ in ITEM_INDEX.items()}
                 for k,_ in ITEM_INDEX.items():

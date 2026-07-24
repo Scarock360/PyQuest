@@ -2,7 +2,7 @@ import os
 import ctypes
 from pynput.keyboard import Listener as KeyboardListner
 import time
-from utils.utils import tl,tr,bl,br,hr,vt,lt,rt,tt,bt, text_len
+from utils.utils import tl,tr,bl,br,hr,vt,lt,rt,tt,bt, text_len, WHITE
 from utils._item_index import ITEM_INDEX
 from utils.selectors import Selector
 from game_states.map_state import MapState
@@ -144,15 +144,18 @@ class Game:
 
     @classmethod
     def add_item(cls,item,count=1):
-        cls.party[list(cls.party)[0]].add_item(item,count)
+        cls.party[0].add_item(item,count)
 
     @classmethod
     def remove_item(cls,item,count=1):
-        cls.party[list(cls.party)[0]].remove_item(item,count)
+        cls.party[0].remove_item(item,count)
 
     @classmethod
-    def update_health_bars(cls):
-        cls._party="\n".join([c.create_health_bar() for _,c in cls.party.items()])
+    def update_health_bars(cls,reset_colours=False):
+        if reset_colours:
+            for party_member in cls.party:
+                party_member.box_colour = WHITE
+        cls._party="\n".join([c.create_health_bar() for c in cls.party])
 
     @classmethod
     def write_to_dialog_box(cls, message):

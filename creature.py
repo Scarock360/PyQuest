@@ -10,29 +10,7 @@ import random
 EXP_TO_LEVEL = 100
 
 class Creature:
-    name = None
-    level = None
-    hit_points = None
-    max_hit_points = None
-    power = None
-    resilience = None
-    agility = None
-    attack_string = None
-    attack_type = None
-    accuracy = None
-    boss = False
-    cooldown_skills = None
-    limited_skills = None
-    attack_count = 1
-    flags = {}
-
-    true_prestige = False
-
-    exp=0
-    level=1
-
-    stat_points = 5
-    class_points = 20
+    battleState = None
 
     class_levels = {}
 
@@ -85,8 +63,10 @@ class Creature:
         self.limited_skills  = {s:SKILL_INDEX[s]["uses"] for s in skills if "uses" in SKILL_INDEX[s]}
         self.actions = actions
         self.boss = boss
-        self.additional_attack_tags = ["pressure:100"]
+        self.additional_attack_tags = []
         self.inventory = {}
+        self.flags={}
+        self.attack_count = 1
 
         # Equipment
         self.main_hand = None
@@ -115,16 +95,16 @@ class Creature:
     def from_index(cls,index, boss_name_override=None, level=1):
         definition = CREATURE_INDEX[index]
         lv = max(level-1,0)
-        level_ups = [0,0,0]
+        level_up_stats = [0,0,0]
         for _ in range(lv):
-            level_ups[random.choice([0,1,2])] += 1
+            level_up_stats[random.choice([0,1,2])] += 1
 
         c = cls(
             index if boss_name_override is None else boss_name_override,
             definition["max_hp"],
-            definition["power"] + (lv * 1) + level_ups[0],
-            definition["resilience"] + (lv * 1) + level_ups[1],
-            definition["agility"] + (lv * 1) + level_ups[2],
+            definition["power"] + (lv * 1) + level_up_stats[0],
+            definition["resilience"] + (lv * 1) + level_up_stats[1],
+            definition["agility"] + (lv * 1) + level_up_stats[2],
             definition["damage"],
             definition["damage_type"],
             definition["accuracy"],
@@ -137,8 +117,17 @@ class Creature:
         for i, item in enumerate(definition.get("equipment",[])):
             c.equip(i,item)
 
-        for _, ability in enumerate(definition.get("abilities",[])):
-            c.gain_ability(ability)
+        for level_threshold, level_up_ability in definition.get("levels",{}).items():
+            if level >= level_threshold:
+                c.gain_ability(level_up_ability)
+
+
+        # for i, ability in enumerate(definition.get("levels",[])):
+        #     if i <= lv:
+        #         c.gain_ability(ability)
+
+        # for _, ability in enumerate(definition.get("abilities",[])):
+        #     c.gain_ability(ability)
 
         return c
 
@@ -147,11 +136,11 @@ class Creature:
             if not self._validate(slot,None if equiped_item is None else ITEM_INDEX[equiped_item]):
                 for i in self.equip(slot,None):
                     self.add_item(i)
-        for i in self.equip(0,self.get_gear()[0]):
+        sts, inv = self._equip(0,self.get_gear()[0])
+        for i in inv:
             self.add_item(i)
-        new_stats = self.base_stats.copy()
-        self.apply_flags(new_stats)
-        for stat, value in new_stats.items():
+        self.apply_flags(sts)
+        for stat, value in sts.items():
             setattr(self,stat,value)
 
     def apply_flags(self, temp_stats = None):
@@ -221,21 +210,47 @@ class Creature:
             string = string.replace(c,f"{self.get_class_level(c)}")
         return string
 
+    def _get_elemental_tag(self,damage_type):
+        match damage_type:
+            case "Fire":
+                if self.get_flag(f"{damage_type} Adept") > 0:
+                    return ["burn:Elemental"]
+            case "Wind":
+                if self.get_flag(f"{damage_type} Adept") > 0:
+                    return ["haste:Elemental"]
+            case "Cold":
+                if self.get_flag(f"{damage_type} Adept") > 0:
+                    return ["frost:Elemental"]
+            case "Earth":
+                if self.get_flag(f"{damage_type} Adept") > 0:
+                    return ["stun:Elemental"]
+        return []
+
+    def _get_weapon_tags(self,weapon):
+        if weapon is None:
+            return []
+        else:
+            return ITEM_INDEX[weapon]["tags"]
+
     def attack(self, foes, target, tags=None, damage_override=None, type_override=None, accuracy_override=None, count_override=None):
         """attack"""
+        mh_damage_type =  type_override or self.attack_type
+        mh_damage_roll = damage_override or self.attack_string
+        mh_accuracy = accuracy_override or self.accuracy
+        attack_count = count_override or self.attack_count
+
         attack_tags=[]
         attack_tags.extend(tags or [])
         attack_tags.extend(self.additional_attack_tags)
+        attack_tags.extend(self._get_elemental_tag(mh_damage_type))
         attack_tags = [self.replace_class_refs(tag) for tag in attack_tags]
+
+        mh_tags = [tag for tag in attack_tags]
+        mh_tags.extend(self._get_weapon_tags(self.main_hand))
 
         if not ("cleave" in attack_tags or ("explosive" in attack_tags and "spell" in attack_tags)):
             foes = [foes[target]]
 
-        attack_count = count_override or self.attack_count
-
-        mh_damage_type =  type_override or self.attack_type
-        mh_damage_roll = damage_override or self.attack_string
-        mh_accuracy = accuracy_override or self.accuracy
 
         oh_detail = None
         if "weapon" in attack_tags:
@@ -244,15 +259,17 @@ class Creature:
                 oh_damage_type = type_override or oh_detail["weapon"]["damage_type"]
                 oh_damage_roll = damage_override or oh_detail["weapon"]["damage"]
                 oh_accuracy = accuracy_override or oh_detail["weapon"]["accuracy"]
+                oh_tags = [tag for tag in attack_tags]
+                oh_tags.extend(self._get_weapon_tags(self.off_hand))
 
-        self.pre_attack(tags)
+        self.pre_attack(attack_tags)
 
         damage_delt = []
         for _ in range(attack_count):
             for foe in foes:
-                damage_delt.append(self._attack(foe,attack_tags,mh_accuracy,mh_damage_roll,mh_damage_type))
+                damage_delt.append(self._attack(foe,mh_tags,mh_accuracy,mh_damage_roll,mh_damage_type))
                 if oh_detail is not None:
-                    damage_delt.append(self._attack(foe,attack_tags,oh_accuracy,oh_damage_roll,oh_damage_type))
+                    damage_delt.append(self._attack(foe,oh_tags,oh_accuracy,oh_damage_roll,oh_damage_type))
         total_damage = sum(damage_delt)
         match len(damage_delt):
             case 0:
@@ -284,10 +301,11 @@ class Creature:
             if attack_roll < accuracy + gravity_bonus - 90:
                 crit_multiplier = 2
             damage_delt = foe.take_damage(
-                (calculate(self.replace_class_refs(damage_die)) + attack_power) * crit_multiplier,
+                (calculate(self.replace_class_refs(damage_die)) + attack_power) * crit_multiplier + self.get_flag("Counter"),
                 attack_tags,
                 damage_type
             )
+            self.flags["Counter"] = 0
             self.post_attack(foe, attack_tags, damage_delt)
 
         return damage_delt
@@ -298,13 +316,11 @@ class Creature:
             tag_name  = tag_split[0]
             match tag_name:
                 case "frost":
-                    if self.get_flag("Cold Adept")>0:
-                        self.temp_hitpoints += int(tag_split[1])
-                        self.temp_hitpoints = min(self.temp_hitpoints, self.max_hit_points)
+                    self.temp_hitpoints += int(tag_split[1])
+                    self.temp_hitpoints = min(self.temp_hitpoints, self.max_hit_points)
                 case "haste":
-                    if self.get_flag("Wind Adept")>0:
-                        self.flags[tag_name] = self.get_flag(tag_name) + int(tag_split[1])
-                        self.acceleration += int(tag_split[1])
+                    self.flags[tag_name] = self.get_flag(tag_name) + int(tag_split[1])
+                    self.acceleration += int(tag_split[1])
 
     def post_attack(self, foe, tags, damage):
         for tag in tags:
@@ -323,13 +339,18 @@ class Creature:
                     if tag_name in ["burn","stun","magnetic","mirage","pressure","poison"]:
                         foe.flags[tag_name] = foe.get_flag(tag_name) + int(tag_split[1])
                         if tag_name == "pressure" and foe.get_flag(tag_name) > 99:
-                            presure_damage = foe.take_damage(int(foe.max_hit_points*(0.1 if foe.boss else 0.3)),["penetrating"])
-                            # BattleState.combat_log.append(
-                            #     f"${'The ' if not foe.boss else ''}${foe.name} burst taking {presure_damage} damage.\n"
-                            # )
+                            foe.flags[tag_name] = foe.get_flag(tag_name) - 100
+                            pressure_damage = foe.take_damage(int(foe.max_hit_points*(0.1 if foe.boss else 0.3)),["penetrating"])
+                            if self.battleState:
+                                self.battleState.combat_log.append(
+                                    f"{'The ' if not foe.boss else ''}{RED}{foe.name}{ENDC} burst taking {pressure_damage} damage.\n"
+                                )
 
     def take_damage(self, damage, tags, damage_type="un-typed"):
         """damage"""
+        if self.flags.get("Fortress",0) > 0:
+            self.flags["Counter"] = self.flags.get("Counter",0) + damage
+            return 0
         damage_taken = damage * self.resistances.get("ALL", 1)
         damage_taken = damage_taken * self.resistances.get(damage_type, 1)
         if damage_taken > 0:
@@ -427,7 +448,10 @@ class Creature:
         if(self.get_flag("burn") > 0):
             burn_damage = self.get_flag("burn")
             real_damage = self.take_damage(burn_damage, ["penetrating"], "Fire")
-            messages.append(f"The {self.name} burnt for {real_damage} Fire damage.\n")
+            if self.battleState:
+                self.battleState.combat_log.append(
+                    f"{'' if self.boss else 'The '}{RED}{self.name}{ENDC} burnt for {real_damage} Fire damage.\n"
+                )
             if(self.get_flag("energy") > 0):
                 self.flags["energy"] = 0
             else:
@@ -435,8 +459,12 @@ class Creature:
         if(self.get_flag("poison") > 0):
             poison_damage = self.get_flag("poison")
             real_damage = self.take_damage(poison_damage, ["penetrating"], "Toxic")
-            messages.append(f"The {self.name} suffered for {real_damage} Toxic damage.\n")
+            if self.battleState:
+                self.battleState.combat_log.append(
+                    f"{'' if self.boss else 'The '}{RED}{self.name}{ENDC} suffered for {real_damage} Toxic damage.\n"
+                )
             self.flags["poison"] -= 1
+        self.flags.pop("Fortress","")
         self.reset_stats()
         return messages
 

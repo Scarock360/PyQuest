@@ -57,7 +57,7 @@ class MapState(AbstractGameState):
             case "Interact":
                 cls.interact()
             case "Skills":
-                cls.GAME.states["skills"].pre_shift("map",cls.GAME.party["hero"])
+                cls.GAME.states["skills"].pre_shift("map",cls.GAME.party[0])
                 cls.GAME.change_state("skills")
             case "Items":
                 if len(cls.GAME.inventory.keys()) > 0:
@@ -71,7 +71,7 @@ class MapState(AbstractGameState):
             case "Level up":
                 cls.GAME.states["equipment"].pre_shift("map")
                 cls.GAME.change_state("equipment")
-                cls.GAME.states["status"].pre_shift(cls.GAME.party["hero"],"map",True)
+                cls.GAME.states["status"].pre_shift(cls.GAME.party[0],"map",True)
                 cls.GAME.change_state("status")
             case "Rest":
                 cls.GAME.dialog_box = cls.Rest()
@@ -147,7 +147,8 @@ class MapState(AbstractGameState):
         split_map = cls.current_level._MAP.split('\n')
         for ax,ay in [(0,0),(-2,0),(2,0),(0,1),(0,-1)]:
             if split_map[y+ay][x+ax:x+ax+2] == "▒▒":
-                for _,c in cls.GAME.party.items():
+                cls.GAME.party = [cls.GAME.party[0]]
+                for _,c in cls.GAME.party:
                     c.hit_points = c.max_hit_points
                 cls.GAME.update_health_bars()
                 for y,e in cls.current_level.enemy_register.items():
@@ -190,7 +191,7 @@ class MapState(AbstractGameState):
         cls.current_level._MAP = "\n".join(split_map)
         if boss:
             cls.current_level.enemy_register[y].pop(x)
-        for k,c in cls.GAME.party.items():
+        for c in cls.GAME.party:
             c.cooldown_skills = {k:0 for k,_ in c.cooldown_skills.items()}
         victory_message = f"You won, earning yourself {GREEN}{exp}{ENDC} exp"
         rewards = cls.GAME.states["battle"].rewards
@@ -209,7 +210,7 @@ class MapState(AbstractGameState):
 
 
         cls.GAME.dialog_box = victory_message
-        cls.GAME.party["hero"].gain_exp(exp)
+        cls.GAME.party[0].gain_exp(exp)
 
     @classmethod
     def _check_valid(cls,y,x):

@@ -48,7 +48,6 @@ class Selector:
                 self.v_min += 1
                 self.v_max += 1
 
-
 class GroupedSelector:
     def __init__(self, groups, view_height):
         self._setupGroups(groups, view_height)
@@ -113,3 +112,14 @@ class GroupedSelector:
         self.base_selector.down()
         if self.base_selector.getSelected() in self.groups:
             self.base_selector.down()
+
+class TieredSelector(Selector):
+    def __init__(self,items,view_height):
+        super().__init__(list(items.keys()),view_height)
+        self.groups = items
+
+    def get_sub_selector(self,view_height_override=None):
+        return Selector(
+            self.groups[self.getSelected()],
+            view_height_override or self.v_height
+        )

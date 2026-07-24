@@ -1,4 +1,7 @@
 CREATURE_INDEX = {
+    "Hero":{
+        "Drops":{}
+    },
     "Dummy":{
         "exp": 0,
         "max_hp": 99999999,
@@ -41,7 +44,10 @@ CREATURE_INDEX = {
                 "message": "{NAME} is just clowning around.\n",
                 "chance":10
             }
-        ]
+        ],
+        "levels":{
+            2: "Double Attack",
+        }
     },
     "Rat":{
         "exp": 10,
@@ -84,7 +90,10 @@ CREATURE_INDEX = {
             None,
             None,
             None,
-        ]
+        ],
+        "levels":{
+            1: "Spark",
+        }
     },
     "Pigeon":{
         "exp": 10,
@@ -104,6 +113,9 @@ CREATURE_INDEX = {
         ],
         "drops":{
             "feather": 100
+        },
+        "levels":{
+            1:"Gust"
         }
     },
     "Pixie":{
@@ -122,14 +134,15 @@ CREATURE_INDEX = {
             "chance":10
         },
     ],
-    "abilities":[
-        "Basic Divine Magic"
-    ]
+    "levels":{
+        1: "Basic Divine Magic",
+        10: "Basic Vampiric Magic",
+    }
 },
     "Gnome":{
         "exp": 10,
         "max_hp": 8,
-        "power": 1,
+        "power": 4,
         "resilience": 1,
         "agility": 10,
         "damage": "1d2",
@@ -141,6 +154,9 @@ CREATURE_INDEX = {
                 "action":"attack",
                 "chance":10
             },
-        ]
+        ],
+        "levels":{
+            3:"Double Attack"
+        }
     }
 }

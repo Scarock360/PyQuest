@@ -6,6 +6,7 @@ sys.path.insert(0,"../PyQuest\\game_states" )
 from utils._creature_index import CREATURE_INDEX
 from game_state import AbstractGameState
 from creature import Creature
+import creature_ai
 from utils.utils import RED, ENDC, text_len, MAGENTA, WHITE, roll
 
 class BattleState(AbstractGameState):
@@ -33,7 +34,7 @@ class BattleState(AbstractGameState):
     @classmethod
     def setup_actors(cls):
         cls.actors=[]
-        cls.actors.extend([v for _,v in cls.GAME.party.items()])
+        cls.actors.extend([v for v in cls.GAME.party])
         cls.actors.extend(cls.enemies)
         cls.actors[cls.turn_tracker].override_colours(box_colour = MAGENTA)
 
@@ -51,8 +52,10 @@ class BattleState(AbstractGameState):
             e.override_colours(box_colour= RED)
         cls.actors=[]
         cls.turn_tracker = 0
-        cls.actors.extend([v for _,v in cls.GAME.party.items()])
+        cls.actors.extend([v for v in cls.GAME.party])
         cls.actors.extend(cls.enemies)
+        for actor in cls.actors:
+            actor.battleState = cls
         cls.selected_enemy = 0
         cls.combat_log_selected = -1
         cls.combat_log = [f"You've encountered some {RED}enemies{ENDC}\n"]
@@ -93,6 +96,8 @@ class BattleState(AbstractGameState):
                 cls.GAME.states["skills"].pre_shift("battle",cls.actors[cls.turn_tracker])
                 cls.GAME.change_state("skills")
             case "Flee":
+                cls.GAME.dialog_box="You fled.\n"
+                cls.GAME.update_health_bars(True)
                 cls.GAME.change_state("map")
             case "Items":
                 cls.GAME.states["inventory"].pre_shift("battle")
@@ -133,50 +138,48 @@ class BattleState(AbstractGameState):
         cls.actors[cls.turn_tracker].start_turn()
         cls.generate_dialog()
         cls.generate_display()
-        player_actors = len([act for act in cls.actors if act in [pm[1] for pm in cls.GAME.party.items()]])
+        player_actors = len([act for act in cls.actors if act in [pm for pm in cls.GAME.party]])
         if player_actors <= 0:
             return
         if len(cls.actors) - player_actors <= 0:
             return
-        if cls.turn_tracker >= len([act for act in cls.actors if act in [pm[1] for pm in cls.GAME.party.items()]]):
+        if cls.turn_tracker >= len([act for act in cls.actors if act in [pm for pm in cls.GAME.party]]):
             cls.enemy_turn()
             return cls.end_turn()
 
     @classmethod
     def enemy_turn(cls):
         creature = cls.actors[cls.turn_tracker]
-        action_max = -1
-        for a in creature.actions:
-            action_max += a["chance"]
-        target_max = len([act for act in cls.actors if act in [pm[1] for pm in cls.GAME.party.items()]])-1
-        if target_max == -1:
-            return False
-
-        target = random.Random().randint(0,target_max)
-        action_val = random.Random().randint(0,action_max)
-        action=None
-        for a in creature.actions:
-            action_val -= a["chance"]
-            if action_val <= 0:
-                action = a
-                break
-            
-        match(action["action"]):
-            case "attack":
-                cls.combat_log.append(
-                    creature.attack(list(cls.GAME.party.values()),target,["weapon"])
-                )
-            case "nothing":
-                cls.combat_log.append(
-                    action["message"].replace("{NAME}",creature.name)
-                )
+        action = creature_ai.get_action(
+            creature,
+            cls.enemies,
+            cls.GAME.party,
+            1,
+            ""
+            )
+        if action ["skill"] != "attack":
+            cls.GAME.states["skills"].pre_shift("battle",cls.actors[cls.turn_tracker])
+            cls.GAME.states["skills"].perform_action(
+                action["skill"],
+                cls.enemies,
+                cls.GAME.party,
+                creature,
+                action["target"]
+            )
+        else:
+            cls.combat_log.append(
+                creature.attack(
+                    list([pm for pm in cls.GAME.party]),
+                    cls.GAME.party.index(action["target"]),
+                    ["weapon"])
+            )
         time.sleep(0.5)
         return True
 
     @classmethod
     def _calculate_exp(cls):
         exp = 0
-        player_level = cls.GAME.party["hero"].level
+        player_level = cls.GAME.party[0].level
         for e in cls.raw_enemies:
             exp_multi = -(player_level - e["level"])*0.1
             exp_multi += 1
@@ -205,13 +208,13 @@ class BattleState(AbstractGameState):
                     cls.turn_tracker -= 1
                 if a in cls.enemies:
                     cls.enemies.pop(cls.enemies.index(a))
-        player_actor_count = len([act for act in cls.actors if act in [pm[1] for pm in cls.GAME.party.items()]])
+        player_actor_count = len([act for act in cls.actors if act in [pm for pm in cls.GAME.party]])
         cls.GAME.update_health_bars()
         if player_actor_count <=0:
             cls.GAME.states["title"].pre_shift()
             return cls.GAME.change_state("title")
         if len(cls.enemies) <= 0:
-            for member in cls.GAME.party.values():
+            for member in [pm for pm in cls.GAME.party]:
                 member.reset_stats()
             cls.GAME.states["map"].resolve_combat(cls._calculate_exp())
             cls.GAME.change_state("map")

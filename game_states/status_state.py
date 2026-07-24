@@ -1,9 +1,10 @@
+import math
 import sys
 sys.path.insert(0,"../PyQuest\\game_states" )
 sys.path.insert(0,"../PyQuest\\resources" )
 from game_state import AbstractGameState
-from utils.selectors import Selector, GroupedSelector
-from utils.utils import GREEN, RED, ENDC, GREY
+from utils.selectors import Selector, GroupedSelector, TieredSelector
+from utils.utils import GREEN, RED, ENDC, GREY, tl, vt, bl, hr, tt, rt, bt, raw_text
 from utils._class_index import CLASS_INDEX
 
 class StatusState(AbstractGameState):
@@ -35,7 +36,9 @@ class StatusState(AbstractGameState):
         else:
             cls.menu_options = ["Back"]
 
-        cls.class_selection = GroupedSelector({c: CLASS_INDEX[c]["nodes"].keys() for c in cls.creature.get_levelable_classes()},6)
+        cls.class_selection = TieredSelector({c: list(CLASS_INDEX[c]["nodes"].keys()) for c in CLASS_INDEX},6)
+        cls.ability_selection = None
+        cls.class_view_level = "class"
 
     @classmethod
     def handle_inputs(cls,key):
@@ -59,24 +62,34 @@ class StatusState(AbstractGameState):
             case "Classes":
                 match f"{key}":
                     case "'s'":
-                        cls.class_selection.down()
+                        match cls.class_view_level:
+                            case "abilities":
+                                cls.ability_selection.down()
+                            case "class":
+                                cls.class_selection.down()
                     case "'w'":
-                        cls.class_selection.up()
+                        match cls.class_view_level:
+                            case "abilities":
+                                cls.ability_selection.up()
+                            case "class":
+                                cls.class_selection.up()
                     case "'a'":
-                        old = cls.creature.get_levelable_classes()
-                        cls.creature.lose_ability(cls.class_selection.getSelected())
-                        cls.creature.reset_stats()
-                        new = cls.creature.get_levelable_classes()
-                        if old != new:
-                            cls.class_selection.updateGroups({c: CLASS_INDEX[c]["nodes"].keys() for c in cls.creature.get_levelable_classes()},6)
+                        if cls.class_view_level == "abilities":
+                            cls.class_view_level = "class"
                     case "'d'":
-                        old = cls.creature.get_levelable_classes()
-                        cls.creature.gain_ability(cls.class_selection.getSelected())
-                        cls.creature.reset_stats()
-                        new = cls.creature.get_levelable_classes()
-                        #print(f"{old} == {new} = {old == new}")
-                        if old != new:
-                            cls.class_selection.updateGroups({c: CLASS_INDEX[c]["nodes"].keys() for c in cls.creature.get_levelable_classes()},6)
+                        match cls.class_view_level:
+                            case "class":
+                                selected_class = cls.class_selection.getSelected()
+                                if selected_class in cls.creature.get_levelable_classes():
+                                    cls.class_view_level = "abilities"
+                                    cls.ability_selection = cls.class_selection.get_sub_selector()
+                            case "abilities":
+                                ability = cls.ability_selection.getSelected()
+                                if ability in cls.creature.acquired_skills:
+                                    cls.creature.lose_ability(ability)
+                                else:
+                                    cls.creature.gain_ability(ability)
+                                cls.creature.reset_stats()
         cls.generate_display()
 
     @classmethod
@@ -122,21 +135,52 @@ Lv {cls.creature.level} {cls.creature.get_class()}"""
                 view += f"\n\n    Remaining Attribute Points: {cls.creature.stat_points}"
             case "Classes":
                 selector_view = cls.class_selection.getView()
-                selector_view = [f"{x[0:6]}{GREEN}{x[6:]}{ENDC}" if x[6:] in cls.creature.acquired_skills else x for x in selector_view]
-                selector_view = [
-                    f"{x[0:6]}{GREY}{x[6:]}{ENDC}" 
-                    if cls.creature.vlaidate_ability(x[6:]) is False else x
-                    for x in selector_view
-                ]
-                view += f"\n Classes:{' '*19}Class Points:{cls.creature.class_points}\n" + "\n".join([ f"{s}" for s in selector_view])
+                selector_view = [f"{x[0:2]}{GREY if x[2:] not in cls.creature.get_levelable_classes() else ''}{x[2:]}{ENDC}" for x in selector_view]
+                selected_class = cls.class_selection.getSelected()
+                match(cls.class_view_level):
+                    case "class":
+                        cls.GAME.dialog_box = f"{selected_class}\n{CLASS_INDEX[selected_class]['description']}"
+                    case "abilities":
 
-                _, ability_details = cls.creature.get_ability(cls.class_selection.getSelected())
+                        #message = "\n"
+                        abilities_view = cls.ability_selection.getView()
+                        separator = f"{tl}{hr}{vt} {vt} {vt} {vt} {bl}{hr}"
+                        separator_swap = {
+                            f"{tl}{hr}":f"{tt}{hr}",
+                            f"{vt} "   :f"{rt} ",
+                            f"{bl}{hr}":f"{bt}{hr}"
+                        }
+                        c = cls.class_selection.current - cls.class_selection.v_min
+                        max_len = 0
+                        for cl in CLASS_INDEX.keys():
+                            max_len = max(max_len, len(cl))
 
-                cls.GAME.dialog_box = ability_details["ability_id"] + "\n" + (
-                    ability_details["description"]
-                    if cls.creature.vlaidate_ability(ability_details["ability_id"])
-                    else ability_details["requirements"]["description"]
-                )
+                        for i in range(6):
+                            selected = i == c
+                            padding = f'{hr}' if selected else ' '
+                            separator_char = separator_swap[f"{separator[i*2]}{separator[i*2+1]}"] if selected else f"{separator[i*2]}{separator[i*2+1]}"
+                            pre_ability = abilities_view[i][0:2]
+                            ability = abilities_view[i][2:]
+                            ability_colour = (
+                                GREEN if ability in cls.creature.acquired_skills else
+                                GREY if not cls.creature.vlaidate_ability(ability) else
+                                ''
+                            )
+                            ability = f"{ability_colour}{ability}{ENDC}"
+                            selector_view[i]+=f"{padding*((max_len+3)-len(raw_text(selector_view[i])))}{separator_char}  {pre_ability}{ability}"
+
+                        _, ability_details = cls.creature.get_ability(cls.ability_selection.getSelected())
+                        cls.GAME.dialog_box = ability_details["ability_id"] + "\n" + (
+                            ability_details["description"]
+                            if cls.creature.vlaidate_ability(ability_details["ability_id"])
+                            else ability_details["requirements"]["description"]
+                        )
+
+
+                view += f"\n Classes:{' '*19}Class Points:{cls.creature.class_points}\n" + "\n".join([ f"  {s}" for s in selector_view])
+
+                # 
+
 
 
         while len(view.split("\n")) < 11:

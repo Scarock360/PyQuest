@@ -129,7 +129,7 @@ class InventoryState(AbstractGameState):
         item_tags = item_detail["tags"]
         if cls.previous_state in item_tags:
             if "restorative" in item_tags:
-                options = [(v.name,partial(cls._use_restorative,item,k)) for k,v in cls.GAME.party.items()]
+                options = [(v.name,partial(cls._use_restorative,item,i)) for i,v in enumerate(cls.GAME.party)]
                 options.append(("Cancel",partial(cls.GAME.change_state,"inventory")))
                 
                 cls.GAME.states["question"].pre_shift(

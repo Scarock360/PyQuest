@@ -152,11 +152,25 @@ def question(question_text: str,options: dict,):
 
 
 
-def calculate(equation:str) -> int:
+def calculate(equation:str, force="") -> int:
     equation = _brackets(equation)
-    equation = _abstract_equation(equation,{
-        "d":lambda nums: f"{sum([random.Random().randint(1,int(nums[1])) for _ in range(int(nums[0]))])}"
-    })
+    match force:
+        case "max":
+            equation = _abstract_equation(equation,{
+                "d":lambda nums: f"{nums[0]*nums[1]}"
+            })
+        case "min":
+            equation = _abstract_equation(equation,{
+                "d":lambda nums: f"{nums[0]}"
+            })
+        case "average":
+            equation = _abstract_equation(equation,{
+                "d":lambda nums: f"{nums[0]*(nums[1]/2+0.5)}"
+            })
+        case _:
+            equation = _abstract_equation(equation,{
+                "d":lambda nums: f"{sum([random.Random().randint(1,int(nums[1])) for _ in range(int(nums[0]))])}"
+            })
     equation = _abstract_equation(equation,{
         "^":lambda nums: f"{pow(nums[0],nums[1])}"
     })
@@ -172,7 +186,7 @@ def calculate(equation:str) -> int:
 
 def _brackets(equation:str):
     for bracketed_section in regex.findall(r"\((?:[^\(\)]|(?R))*\)",equation):
-        replacement = calculate(bracketed_section[1:-1])
+        replacement = f"{calculate(bracketed_section[1:-1])}"
         equation = equation.replace(bracketed_section,replacement,1)
     return equation
 
@@ -193,5 +207,26 @@ def _abstract_equation(equation, operations):
                     break
     return equation
 
-# for e in ["7+4^5-4", "4-5.1", "2.6+2.5"]:
-#     print(f"{e} = {calculate(e)}")
+def normalise(arr):
+    total=0
+    for item in arr:
+        total+= item
+    return [item/total if total>0 else 0 for item in arr]
+
+
+# array = [1,2,3,4,5]
+# print(normalise([a for a in array]))
+# print(normalise([pow(a,2) for a in array]))
+
+
+
+# for e in ["3d10", "8d6", "2d100"]:
+#     print(f"------ {e} ------")
+#     print(f"Min = {calculate(e,'min')}")
+#     print(f"Avr = {calculate(e,'average')}")
+#     print(f"Max = {calculate(e,'max')}")
+#     print(f"\t{e} = {calculate(e)}")
+#     print(f"\t{e} = {calculate(e)}")
+#     print(f"\t{e} = {calculate(e)}")
+#     print(f"\t{e} = {calculate(e)}")
+#     print(f"\t{e} = {calculate(e)}")

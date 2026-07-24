@@ -2,6 +2,7 @@ CLASS_INDEX={
     "Martial":{
         "class_id": "Martial",
         "class_name":"Warrior",
+        "description": "A simple combat specialist, that maximises simple attacks.",
         "type": "Base",
         "nodes": {
             "Double Attack":{
@@ -252,11 +253,12 @@ CLASS_INDEX={
     "Elemental":{
         "class_id": "Elemental",
         "class_name":"Mage",
+        "description": "An arcane master of fire and ice, wind and earth.",
         "type": "Base",
         "nodes": {
             "Chill":{
                 "ability_id":"Chill",
-                "description":"PLACEHOLDER DESCRIPTION",
+                "description":"Chill: a single target cold spell.",
                 "effect":{
                     "skills": ["Chill"]
                 },
@@ -264,7 +266,7 @@ CLASS_INDEX={
             },
             "Freeze":{
                 "ability_id":"Freeze",
-                "description":"PLACEHOLDER DESCRIPTION",
+                "description":"Freeze: a multi target cold spell.",
                 "effect":{
                     "skills": ["Freeze"],
                     "increase_flag":{
@@ -272,46 +274,57 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Chill ability.",
                     "previous_nodes": { "all_of" : ["Chill"]}
                 }
             },
-            "Tsunami":{
-                "ability_id":"Tsunami",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+            "Torrent":{
+                "ability_id":"Torrent",
+                "description":"Torrent: a powerful single target cold spell.",
+                "effect":{
+                    "skills": ["Torrent"]
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Freeze ability.",
                     "previous_nodes": { "all_of" : ["Freeze"]}
                 }
             },
             "Spark":{
                 "ability_id":"Spark",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Spark: a single target fire spell.",
+                "effect":{
+                    "skills": ["Spark"]
+                },
                 "requirements":{}
             },
             "Heat":{
                 "ability_id":"Heat",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Heat: a multi target fire spell.",
+                "effect":{
+                    "skills": ["Heat"],
+                    "increase_flag":{
+                        "Fire Adept": 1
+                    }
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Spark ability.",
                     "previous_nodes": { "all_of" : ["Spark"]}
                 }
             },
             "Flare":{
                 "ability_id":"Flare",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Flare: a powerful single target fire spell.",
+                "effect":{
+                    "skills": ["Flare"]
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Heat ability.",
                     "previous_nodes": { "all_of" : ["Heat"]}
                 }
             },
             "Gust":{
                 "ability_id":"Gust",
-                "description":"PLACEHOLDER DESCRIPTION",
+                "description":"Shunt: a single target wind spell",
                 "effect":{
                     "skills": ["Shunt"]
                 },
@@ -319,29 +332,32 @@ CLASS_INDEX={
             },
             "Thunder":{
                 "ability_id":"Thunder",
-                "description":"PLACEHOLDER DESCRIPTION",
+                "description":"Thunder: a multi target wind spell.",
                 "effect":{
+                    "skills": ["Bolt"],
                     "increase_flag":{
                         "Wind Adept": 1
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Gust ability.",
                     "previous_nodes": { "all_of" : ["Gust"]}
                 }
             },
             "Kinetic":{
                 "ability_id":"Kinetic",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Slam: a powerful single target wind spell.",
+                "effect":{
+                    "skills": ["Slam"]
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Thunder ability.",
                     "previous_nodes": { "all_of" : ["Thunder"]}
                 }
             },
             "Rock and Stone":{
                 "ability_id":"Rock and Stone",
-                "description":"PLACEHOLDER DESCRIPTION",
+                "description":"Toss rock: a single target earth spell.",
                 "effect":{
                     "skills": ["Toss rock"],
                 },
@@ -349,94 +365,136 @@ CLASS_INDEX={
             },
             "Quake":{
                 "ability_id":"Quake",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Quake: a multi target earth spell.",
+                "effect":{
+                    "skills": ["Quake"]
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Rock and Stone ability.",
                     "previous_nodes": { "all_of" : ["Rock and Stone"]}
                 }
             },
             "Steel":{
                 "ability_id":"Steel",
-                "description":"PLACEHOLDER DESCRIPTION",
+                "description":"Javelin: a powerful single target spell.",
                 "effect":{
                     "skills": ["Javelin"],
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Quake ability.",
                     "previous_nodes": { "all_of" : ["Quake"]}
-                }
-            },
-            "Mirage":{
-                "ability_id":"Mirage",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
-                "requirements":{
-                    "description":"",
-                    "previous_nodes": { "all_of" : ["Tsunami","Heat"]}
                 }
             },
             "Spirit":{
                 "ability_id":"Spirit",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Mastery over the creation of weaponised false souls.",
+                "effect":{
+                    "skills": [
+                        "Banshee",
+                        "Wail"
+                    ]
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Flare and Freeze abilities.",
                     "previous_nodes": { "all_of" : ["Flare","Freeze"]}
                 }
             },
-            "Energy":{
-                "ability_id":"Energy",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+            "Mirage":{
+                "ability_id":"Mirage",
+                "description":"Mastery over what others are allowed to perceive.",
+                "effect":{
+                    "skills": [
+                        "Warp",
+                        "Shimmer"
+                    ]
+                },
                 "requirements":{
-                    "description":"",
-                    "previous_nodes": { "all_of" : ["Flare","Thunder"]}
+                    "description":"Requires the Torrent and Heat abilities.",
+                    "previous_nodes": { "all_of" : ["Torrent","Heat"]}
                 }
             },
             "Detonation":{
                 "ability_id":"Detonation",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Mastery over imesureable force.",
+                "effect":{
+                "effect":{
+                    "skills": [
+                        "Explode"
+                    ]
+                },},
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Kinetic and Heat abilities.",
                     "previous_nodes": { "all_of" : ["Kinetic","Heat"]}
+                }
+            },
+            "Energy":{
+                "ability_id":"Energy",
+                "description":"Mastery over the manipulation of pure energy.",
+                "effect":{
+                    "skills": [
+                        "E-Beam",
+                        "E-Bomb"
+                    ]
+                },
+                "requirements":{
+                    "description":"Requires the Flare and Thunder Stance abilities.",
+                    "previous_nodes": { "all_of" : ["Flare","Thunder"]}
                 }
             },
             "Gravity":{
                 "ability_id":"Gravity",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Mastery over the fundamental force of gravity.",
+                "effect":{
+                    "skills": [
+                        "Crush",
+                        "B-Hole"
+                    ]
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Kinetic and Quake abilities.",
                     "previous_nodes": { "all_of" : ["Kinetic","Quake"]}
                 }
             },
             "Magnetic":{
                 "ability_id":"Magnetic",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Mastery over repelling and attracting magics.",
+                "effect":{
+                    "skills": [
+                        "Induction",
+                        "Flux"
+                    ]
+                },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Steal and Thunder abilities.",
                     "previous_nodes": { "all_of" : ["Steel","Thunder"]}
                 }
             },
             "Crystal":{
                 "ability_id":"Crystal",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Mastery over energised crystalline structures.",
+                "effect":{
+                    "skills": [
+                        "C-Burst",
+                        "C-Rain"
+                    ]
+                },
                 "requirements":{
-                    "description":"",
-                    "previous_nodes": { "all_of" : ["Steel","Thunder"]}
+                    "description":"Requires the Steel and Freeze abilities.",
+                    "previous_nodes": { "all_of" : ["Steel","Freeze"]}
                 }
             },
             "Pressure":{
                 "ability_id":"Pressure",
-                "description":"PLACEHOLDER DESCRIPTION",
-                "effect":{},
+                "description":"Mastery over the pressure within encased objects.",
+                "effect":{
+                    "skills": [
+                        "Fathom",
+                        "Atmosphere"
+                    ]
+                },
                 "requirements":{
-                    "description":"",
-                    "previous_nodes": { "all_of" : ["Tsunami","Quake"]}
+                    "description":"Requires the Torrent and Quake abilities.",
+                    "previous_nodes": { "all_of" : ["Torrent","Quake"]}
                 }
             },
         }
@@ -444,6 +502,7 @@ CLASS_INDEX={
     "Divine":{
         "class_id": "Divine",
         "class_name":"Cleric",
+        "description": "A servant of heaven that amplifies their allies strengths.",
         "type": "Base",
         "nodes": {
             "Basic Divine Magic":{
@@ -733,6 +792,7 @@ CLASS_INDEX={
     "Enchanter":{
         "class_id": "Enchanter",
         "class_name":"Enchanter",
+        "description": "An arcane specialist that augments all actions with magic.",
         "type": "Prestige",
         "required_base" : ["Martial","Elemental"],
         "nodes":{
@@ -757,7 +817,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Mirage abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Mirage"]}
                 }
             },
@@ -770,7 +830,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Spirit abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Spirit"]}
                 }
             },
@@ -783,7 +843,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Energy abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Energy"]}
                 }
             },
@@ -796,7 +856,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Detonation abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Detonation"]}
                 }
             },
@@ -809,7 +869,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Gravity abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Gravity"]}
                 }
             },
@@ -822,7 +882,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Magnetic abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Magnetic"]}
                 }
             },
@@ -835,7 +895,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Crystal abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Crystal"]}
                 }
             },
@@ -848,7 +908,7 @@ CLASS_INDEX={
                     }
                 },
                 "requirements":{
-                    "description":"",
+                    "description":"Requires the Balanced Stance and Pressure abilities.",
                     "previous_nodes": { "all_of" : ["Balanced Stance","Pressure"]}
                 }
             },
@@ -857,6 +917,7 @@ CLASS_INDEX={
     "Paladin":{
         "class_id": "Paladin",
         "class_name":"Paladin",
+        "description": "A holy warrior that wields the wrath of god and cold steel.",
         "type": "Prestige",
         "required_base" : ["Martial","Divine"],
         "nodes":{
@@ -901,6 +962,7 @@ CLASS_INDEX={
     "Magus":{
         "class_id": "Magus",
         "class_name":"Magus",
+        "description": "An arcane powerhouse capable of casting incredible spells.",
         "type": "Prestige",
         "required_base" : ["Divine","Elemental"],
         "nodes":{

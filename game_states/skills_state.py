@@ -72,21 +72,94 @@ class SkillsState(AbstractGameState):
             cls.GAME.states[cls.previous_state].generate_display()
 
     @classmethod
-    def attack(cls,attack_detail, name, tags):
+    def attack(cls,user:Creature,target:Creature,foes:list[Creature],skill_detail, then_from=""):
+        attack_detail = skill_detail[then_from]["then"]["attack"] if then_from != "" else skill_detail["attack"]
+        name = skill_detail["name"]
+        tags = skill_detail["tags"]
+        damage_class= skill_detail.get("class",None)
         cls.GAME.change_state(cls.previous_state)
+        if "dynamic_damage" in attack_detail:
+            damage_override = attack_detail["dynamic_damage"](cls.creature.get_class_level(damage_class))
+        else:
+            damage_override = attack_detail.get("damage",None)
+
         cls.GAME.states["battle"].combat_log.append(
-            cls.creature.attack(
-                cls.GAME.states["battle"].enemies,
-                cls.GAME.states["battle"].selected_enemy,
+            user.attack(
+                foes=foes,
+                target=foes.index(target),
                 tags = tags,
-                damage_override = attack_detail.get("damage",None),
+                damage_override = damage_override,
                 type_override = attack_detail.get("damage_type",None),
                 accuracy_override = attack_detail.get("accuracy",None),
                 count_override = attack_detail.get("count",None),
             ) + f" with {name}."
         )
         cls.GAME.states["battle"].combat_log_selected = -1
-        cls.GAME.states["battle"].end_turn()
+
+    @classmethod
+    def perform_action(cls,skill:str,allies:list[Creature],foes:list[Creature],user:Creature,target:Creature):
+        messages = []
+        skill_detail = SKILL_INDEX[raw_text(skill)]
+        if "temp_buff" in skill_detail["tags"]:
+            for k,v in skill_detail["temp_buff"]["stats"].items():
+                opp = v[0]
+                value = int(v[1:])
+                match opp:
+                    case "*":
+                        setattr(user,k,getattr(user,k)*value)
+                    case "/":
+                        setattr(user,k,getattr(user,k)/value)
+                    case "+":
+                        setattr(user,k,getattr(user,k)+value)
+                    case "-":
+                        setattr(user,k,getattr(user,k)-value)
+            if skill_detail["temp_buff"].get("then",False):
+                if "attack" in skill_detail["temp_buff"]["then"]:
+                    cls.attack(user,target,foes,skill_detail,"temp_buff")
+            else:
+                cls.GAME.states["battle"].combat_log_selected = -1
+        elif "attack" in skill_detail["tags"]:
+            cls.attack(user,target,foes,skill_detail)
+        elif "restorative" in skill_detail["tags"]:
+            restored_hit_points = target.restore_hit_points(skill_detail["restorative"])
+            cls.GAME.update_health_bars()
+            messages.append(f"{user.name} uses {skill_detail['name']} on {target.name} restoring {GREEN}{restored_hit_points}{ENDC} hit points.\n")
+        elif "self_flag" in skill_detail["tags"]:
+            for flag in skill_detail["self_flag"].get("remove",[]):
+                user.flags.pop(flag,None)
+            for flag,value in skill_detail["self_flag"].get("add",{}).items():
+                user.flags[flag] = value
+            user.reset_stats()
+        elif "summon" in skill_detail["tags"]:
+            name = skill_detail["summon"]["creature"]
+            if f"{name}_1" not in allies:
+                name = f"{name}_1"
+            elif f"{name}_2" not in allies:
+                name = f"{name}_2"
+            allies.append(Creature.from_index(
+                skill_detail["summon"]["creature"],
+                None,
+                user.get_class_level(skill_detail["class"])
+            ))
+            cls.GAME.update_health_bars()
+            #cls.GAME.change_state(cls.previous_state)
+            summon_message = f"{user.name} summoned a {name[0:-2]} to help them.\n"
+            if cls.previous_state == "battle":
+                cls.GAME.states["battle"].setup_actors()
+                cls.GAME.states["battle"].combat_log.append(summon_message)
+                cls.GAME.states["battle"].combat_log_selected = -1
+            else:
+                cls.GAME.dialog_box = summon_message
+        else:
+            return
+
+        if raw_text(skill) in user.cooldown_skills:
+            user.cooldown_skills[raw_text(skill)] = skill_detail["cooldown"]
+        if raw_text(skill) in user.limited_skills:
+            user.limited_skills[raw_text(skill)] -= 1
+
+        cls.GAME.change_state(cls.previous_state)
+
 
     @classmethod
     def handle_menu_event(cls,event):
@@ -94,71 +167,36 @@ class SkillsState(AbstractGameState):
             case "Back":
                 cls.GAME.change_state(cls.previous_state)
             case _:
-                skill_detail = SKILL_INDEX[raw_text(event)]
                 if raw_text(event)+ENDC in cls.menu_options:
-                    if "temp_buff" in skill_detail["tags"]:
-                        for k,v in skill_detail["temp_buff"]["stats"].items():
-                            opp = v[0]
-                            value = int(v[1:])
-                            match opp:
-                                case "*":
-                                    setattr(cls.creature,k,getattr(cls.creature,k)*value)
-                                case "/":
-                                    setattr(cls.creature,k,getattr(cls.creature,k)/value)
-                                case "+":
-                                    setattr(cls.creature,k,getattr(cls.creature,k)+value)
-                                case "-":
-                                    setattr(cls.creature,k,getattr(cls.creature,k)-value)
-                        if skill_detail["temp_buff"].get("then",False):
-                            if "attack" in skill_detail["temp_buff"]["then"]:
-                                cls.attack(skill_detail["temp_buff"]["then"]["attack"],skill_detail['name'], skill_detail['tags'])
-                        else:
-                            cls.GAME.states["battle"].combat_log_selected = -1
-                            cls.GAME.states["battle"].end_turn()
-
-                    elif "attack" in skill_detail["tags"]:
-                        cls.attack(skill_detail["attack"],skill_detail['name'],skill_detail['tags'])
-                    elif "restorative" in skill_detail["tags"]:
-                        options = [(v.name,partial(cls._use_restorative,cls.creature,skill_detail,v)) for k,v in cls.GAME.party.items()]
+                    skill_detail = SKILL_INDEX[raw_text(event)]
+                    if len([tag for tag in skill_detail["tags"] if tag in ["restorative"]]) > 0:
+                        options = [(v.name,partial(
+                            cls.perform_action,
+                            raw_text(event),
+                            cls.GAME.party,
+                            cls.GAME.states["battle"].enemies,
+                            cls.creature,
+                            v
+                        )) for v in cls.GAME.party]
                         options.append(("Cancel",partial(cls.GAME.change_state,cls.previous_state)))
-                        
                         cls.GAME.states["question"].pre_shift(
                             "battle",
                             f"Who will you use {skill_detail['name']} on?",
                             options
                         )
                         cls.GAME.change_state("question")
-                        return
-                    elif "self_flag" in skill_detail["tags"]:
-                        for flag in skill_detail["self_flag"].get("remove",[]):
-                            cls.creature.flags.pop(flag,None)
-                        for flag,value in skill_detail["self_flag"].get("add",{}).items():
-                            cls.creature.flags[flag] = value
-                        cls.creature.reset_stats()
-                        return
-                    elif "summon" in skill_detail["tags"]:
-                        name = skill_detail["summon"]["creature"]
-                        if f"{name}_1" not in cls.GAME.party:
-                            name = f"{name}_1"
-                        elif f"{name}_2" not in cls.GAME.party:
-                            name = f"{name}_2"
-                        cls.GAME.party[name] = Creature.from_index(skill_detail["summon"]["creature"],None,1)
-                        cls.GAME.update_health_bars()
-                        cls.GAME.change_state(cls.previous_state)
-                        summon_message = f"You summoned a {name[0:-2]} to help you\n"
-                        if cls.previous_state == "battle":
-                            cls.GAME.states["battle"].setup_actors()
-                            cls.GAME.states["battle"].combat_log.append(summon_message)
-                            cls.GAME.states["battle"].combat_log_selected = -1
-                            cls.GAME.states["battle"].end_turn()
-                        else:
-                            cls.GAME.dialog_box = summon_message
                     else:
-                        return
-                    if raw_text(event) in cls.creature.cooldown_skills:
-                        cls.creature.cooldown_skills[raw_text(event)] = skill_detail["cooldown"]
-                    if raw_text(event) in cls.creature.limited_skills:
-                        cls.creature.limited_skills[raw_text(event)] -= 1
+                        cls.perform_action(
+                            raw_text(event),
+                            cls.GAME.party,
+                            cls.GAME.states["battle"].enemies,
+                            cls.creature,
+                            cls.GAME.states["battle"].selected_enemy
+                        )
+                    
+                        if cls.previous_state == "battle":
+                            cls.GAME.states["battle"].end_turn()
+
 
     @classmethod
     def generate_display(cls):
